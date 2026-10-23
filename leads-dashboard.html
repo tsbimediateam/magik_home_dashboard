@@ -8,7 +8,10 @@
 <style>
 body { margin: 0; padding: 16px; font: 13px/1.4 Arial, sans-serif; background: #fff; color: #000; }
 .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
-.bar input[type=search] { padding: 5px 8px; width: 260px; max-width: 100%; }
+.filter { font: inherit; padding: 8px 16px; border: 1px solid #bbb; border-radius: 20px; background: #f5f5f5; color: #000; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,.15); }
+.filter:hover { background: #e8e8e8; }
+.filter b { margin-left: 4px; }
+.filter[aria-pressed="true"] { background: #1f5fbf; border-color: #1f5fbf; color: #fff; }
 .wrap { overflow: auto; max-height: calc(100vh - 120px); border: 1px solid #ccc; }
 table { border-collapse: collapse; font-size: 12px; }
 th, td { border: 1px solid #ddd; padding: 4px 8px; white-space: nowrap; text-align: left; }
@@ -28,7 +31,9 @@ th { position: sticky; top: 0; background: #eee; }
   <h1>Leads Dashboard</h1>
 </div>
 <div class="bar">
-  <input type="search" id="search" placeholder="Search…">
+  <button type="button" class="filter" data-col="16" aria-pressed="false">Quality Leads: <b id="nQL">–</b></button>
+  <button type="button" class="filter" data-col="17" aria-pressed="false">Meetings Scheduled: <b id="nMS">–</b></button>
+  <button type="button" class="filter" data-col="18" aria-pressed="false">Meetings Done: <b id="nMD">–</b></button>
   <span id="count">Loading…</span>
 </div>
 <div class="wrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
@@ -110,14 +115,23 @@ function load(text) {
   render();
 }
 
+// Column index of the active filter button (QL 16, MS 17, MD 18), or null for all rows
+let filterCol = null;
+
 function render() {
-  const q = clean($('search').value).toLowerCase();
-  const rows = q ? ROWS.filter(r => r.some(v => v.toLowerCase().includes(q))) : ROWS;
+  const rows = filterCol === null ? ROWS : ROWS.filter(r => r[filterCol] === '1');
+  const ones = col => ROWS.filter(r => r[col] === '1').length.toLocaleString('en-IN');
+  $('nQL').textContent = ones(16); $('nMS').textContent = ones(17); $('nMD').textContent = ones(18);
   $('tbody').innerHTML = rows.map(r => '<tr>' + r.map(v => `<td>${esc(v)}</td>`).join('') + '</tr>').join('');
   $('count').textContent = `${rows.length.toLocaleString('en-IN')} of ${ROWS.length.toLocaleString('en-IN')} rows`;
 }
 
-$('search').addEventListener('input', render);
+document.querySelectorAll('.filter').forEach(btn => btn.addEventListener('click', () => {
+  const col = Number(btn.dataset.col);
+  filterCol = filterCol === col ? null : col;
+  document.querySelectorAll('.filter').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.col) === filterCol)));
+  render();
+}));
 
 const getText = url => fetch(url, { cache: 'no-store' }).then(r => r.ok ? r.text() : Promise.reject(url));
 
