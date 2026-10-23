@@ -49,7 +49,7 @@ function splitCreated(r) {
 
 const HEADERS = [
   'Sr. No.', 'Date', 'Time',
-  'Contact First Name', 'Contact Last Name', 'Email ID', 'Phone Number',
+  'Contact First Name', 'Contact Last Name', 'Email ID', 'Phone Number', 'Contact Source',
   'Source Campaign', 'Source Medium', 'Source Content', 'Contact Stage', 'Property City',
   'Reason for Not able to Connect', 'Reason for Dead Lead',
 ];
@@ -59,7 +59,7 @@ function toRow(r, i) {
   return [
     String(i + 1), date, time,
     clean(r['Contact First Name']), clean(r['Contact Last Name']), clean(r['Email ID']),
-    cleanPhone(r['Phone Number']),
+    cleanPhone(r['Phone Number']), clean(r['Contact Source']),
     clean(r['Source Campaign']), clean(r['Source Medium']), clean(r['Source Content']),
     clean(r['Contact Stage']), clean(r['Property City']),
     clean(r['Reason for Not able to Connect']), clean(r['Reason for Dead Lead']),
