@@ -3,93 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Magik Home Leads</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<title>Magik Home</title>
 <style>
-body { margin: 0; padding: 16px; font: 13px/1.4 Arial, sans-serif; background: #fff; color: #000; }
-.bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
-.bar input[type=search] { padding: 5px 8px; width: 260px; max-width: 100%; }
-.wrap { overflow: auto; max-height: calc(100vh - 80px); border: 1px solid #ccc; }
-table { border-collapse: collapse; font-size: 12px; }
-th, td { border: 1px solid #ddd; padding: 4px 8px; white-space: nowrap; text-align: left; }
-th { position: sticky; top: 0; background: #eee; }
-#count { color: #555; }
-.hidden { display: none; }
+body { margin: 0; padding: 16px; font: 14px/1.4 Arial, sans-serif; background: #fff; color: #000; }
+.nav { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+.nav h1 { font-size: 18px; margin: 0 0 0 8px; }
+.nav button, .nav .btn { font: inherit; font-size: 13px; padding: 5px 12px; border: 1px solid #bbb; border-radius: 4px; background: #f5f5f5; color: #000; text-decoration: none; cursor: pointer; }
+.nav button:hover, .nav .btn:hover { background: #e8e8e8; }
+h1 { font-size: 22px; margin: 8px 0 20px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; max-width: 960px; }
+.tile { display: block; padding: 28px 20px; border: 1px solid #bbb; border-radius: 6px; background: #f5f5f5; color: #000; text-decoration: none; font-size: 16px; font-weight: bold; text-align: center; }
+.tile:hover { background: #e8e8e8; }
 </style>
 </head>
 <body>
-<div class="bar">
-  <input type="search" id="search" placeholder="Search…">
-  <span id="count">Loading…</span>
+<h1>Magik Home</h1>
+<div class="tiles">
+  <a class="tile" href="crm.html">CRM Data</a>
+  <a class="tile" href="call-center.html">Call Center Data</a>
+  <a class="tile" href="leads-dashboard.html">Leads Dashboard</a>
+  <a class="tile" href="campaign-dashboard.html">Campaign Dashboard</a>
 </div>
-<div class="wrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
-
-<script>
-const clean = s => (s ?? '').toString().trim();
-
-// Remove the country code; numbers shorter than 10 digits are kept as they are
-function cleanPhone(v) {
-  let s = clean(v);
-  if (!s || /^\d{10}$/.test(s)) return s;
-  let d = s.includes(' ') ? s.slice(s.indexOf(' ') + 1).replace(/\D/g, '') : s.replace(/\D/g, '');
-  while (d.length > 10) {
-    const c = ['971', '91', '1'].find(c => d.startsWith(c) && d.length - c.length >= 9);
-    if (!c) break;
-    d = d.slice(c.length);
-  }
-  return d;
-}
-
-// Accepts the raw export ("Created On" = "YYYY-MM-DD hh:mm:ss AM") or one already split into date and time
-function splitCreated(r) {
-  if (r['Created On Date']) return [clean(r['Created On Date']), clean(r['Created On Time'])];
-  const s = clean(r['Created On']), i = s.indexOf(' ');
-  return i < 0 ? [s, ''] : [s.slice(0, i), s.slice(i + 1)];
-}
-
-const HEADERS = [
-  'Sr. No.', 'Date', 'Time',
-  'Contact First Name', 'Contact Last Name', 'Email ID', 'Phone Number', 'Contact Source',
-  'Source Campaign', 'Source Medium', 'Source Content', 'Contact Stage', 'Property City',
-  'Reason for Not able to Connect', 'Reason for Dead Lead',
-];
-
-function toRow(r, i) {
-  const [date, time] = splitCreated(r);
-  return [
-    String(i + 1), date, time,
-    clean(r['Contact First Name']), clean(r['Contact Last Name']), clean(r['Email ID']),
-    cleanPhone(r['Phone Number']), clean(r['Contact Source']),
-    clean(r['Source Campaign']), clean(r['Source Medium']), clean(r['Source Content']),
-    clean(r['Contact Stage']), clean(r['Property City']),
-    clean(r['Reason for Not able to Connect']), clean(r['Reason for Dead Lead']),
-  ];
-}
-
-const $ = id => document.getElementById(id);
-const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-let ROWS = [];
-
-function load(text) {
-  const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, transformHeader: h => h.replace(/^﻿/, '').trim() });
-  ROWS = parsed.data.filter(r => clean(r['Prospect ID']) || clean(r['Lead Name'])).map((r, i) => toRow(r, i));
-  $('thead').innerHTML = '<tr>' + HEADERS.map(h => `<th>${esc(h)}</th>`).join('') + '</tr>';
-  render();
-}
-
-function render() {
-  const q = clean($('search').value).toLowerCase();
-  const rows = q ? ROWS.filter(r => r.some(v => v.toLowerCase().includes(q))) : ROWS;
-  $('tbody').innerHTML = rows.map(r => '<tr>' + r.map(v => `<td>${esc(v)}</td>`).join('') + '</tr>').join('');
-  $('count').textContent = `${rows.length.toLocaleString('en-IN')} of ${ROWS.length.toLocaleString('en-IN')} rows`;
-}
-
-$('search').addEventListener('input', render);
-
-fetch('data/leads.csv', { cache: 'no-store' })
-  .then(r => r.ok ? r.text() : Promise.reject())
-  .then(load)
-  .catch(() => { $('count').textContent = 'Could not load data/leads.csv'; });
-</script>
 </body>
 </html>
