@@ -12,11 +12,23 @@ body { margin: 0; padding: 16px; font: 13px/1.4 Arial, sans-serif; background: #
 .filter:hover { background: #e8e8e8; }
 .filter b { margin-left: 4px; }
 .filter[aria-pressed="true"] { background: #1f5fbf; border-color: #1f5fbf; color: #fff; }
-.wrap { overflow: auto; max-height: calc(100vh - 120px); border: 1px solid #ccc; }
+.wrap { overflow: auto; max-height: calc(100vh - 190px); border: 1px solid #ccc; }
 table { border-collapse: collapse; font-size: 12px; }
 th, td { border: 1px solid #ddd; padding: 4px 8px; white-space: nowrap; text-align: left; }
 th { position: sticky; top: 0; background: #eee; }
 #count { color: #555; }
+.filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 10px; }
+.filters label { display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: #444; }
+.filters input[type=date], .filters summary, .filters .clear { font: inherit; font-size: 13px; padding: 5px 8px; border: 1px solid #bbb; border-radius: 4px; background: #fff; color: #000; }
+.filters .clear { background: #f5f5f5; cursor: pointer; }
+.source { position: relative; }
+.source summary { list-style: none; cursor: pointer; min-width: 180px; }
+.source summary::-webkit-details-marker { display: none; }
+.source summary::after { content: " ▾"; float: right; }
+.source .menu { position: absolute; z-index: 5; top: 100%; left: 0; margin-top: 2px; background: #fff; border: 1px solid #bbb; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,.15); padding: 6px; max-height: 320px; overflow: auto; min-width: 240px; }
+.source .menu label { flex-direction: row; align-items: center; gap: 6px; padding: 3px 4px; color: #000; font-size: 13px; white-space: nowrap; cursor: pointer; }
+.source .menu label:hover { background: #f0f0f0; }
+.source .menu .all { border-bottom: 1px solid #ddd; margin-bottom: 4px; padding-bottom: 6px; }
 .hidden { display: none; }
 .nav { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
 .nav h1 { font-size: 18px; margin: 0 0 0 8px; }
@@ -29,6 +41,17 @@ th { position: sticky; top: 0; background: #eee; }
   <button type="button" onclick="history.length > 1 ? history.back() : location.href = 'index.html'">&larr; Back</button>
   <a class="btn" href="index.html">Home</a>
   <h1>Leads Dashboard</h1>
+</div>
+<div class="filters">
+  <label>From <input type="date" id="dFrom"></label>
+  <label>To <input type="date" id="dTo"></label>
+  <label>Source
+    <details class="source" id="source">
+      <summary id="sourceLabel">All sources</summary>
+      <div class="menu" id="sourceMenu"></div>
+    </details>
+  </label>
+  <button type="button" class="clear" id="clear">Clear filters</button>
 </div>
 <div class="bar">
   <button type="button" class="filter" data-col="16" aria-pressed="false">Quality Leads: <b id="nQL">–</b></button>
@@ -112,19 +135,61 @@ function load(text) {
   const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, transformHeader: h => h.replace(/^﻿/, '').trim() });
   ROWS = parsed.data.filter(r => clean(r['Prospect ID']) || clean(r['Lead Name'])).map((r, i) => toRow(r, i));
   $('thead').innerHTML = '<tr>' + HEADERS.map(h => `<th>${esc(h)}</th>`).join('') + '</tr>';
+  const dates = ROWS.map(r => r[DATE]).filter(Boolean).sort();
+  $('dFrom').min = $('dTo').min = dates[0];
+  $('dFrom').max = $('dTo').max = dates[dates.length - 1];
+  buildSourceMenu();
   render();
 }
 
 // Column index of the active filter button (QL 16, MS 17, MD 18), or null for all rows
 let filterCol = null;
 
+const DATE = 1, SOURCE = 7, BLANK = '(Blank)';
+let SOURCES = [];
+const selectedSources = () => [...document.querySelectorAll('#sourceMenu input[data-source]:checked')].map(i => i.dataset.source);
+
+function buildSourceMenu() {
+  const counts = {};
+  ROWS.forEach(r => { const k = r[SOURCE] || BLANK; counts[k] = (counts[k] || 0) + 1; });
+  SOURCES = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+  $('sourceMenu').innerHTML = '<label class="all"><input type="checkbox" id="srcAll" checked> Select all</label>' +
+    SOURCES.map(k => `<label><input type="checkbox" data-source="${esc(k)}" checked> ${esc(k)} (${counts[k]})</label>`).join('');
+}
+
+function updateSourceLabel(sel) {
+  $('srcAll').checked = sel.length === SOURCES.length;
+  $('srcAll').indeterminate = sel.length > 0 && sel.length < SOURCES.length;
+  $('sourceLabel').textContent = sel.length === SOURCES.length ? 'All sources'
+    : sel.length === 0 ? 'No source selected'
+    : sel.length === 1 ? sel[0] : `${sel.length} sources selected`;
+}
+
 function render() {
-  const rows = filterCol === null ? ROWS : ROWS.filter(r => r[filterCol] === '1');
-  const ones = col => ROWS.filter(r => r[col] === '1').length.toLocaleString('en-IN');
+  const from = $('dFrom').value, to = $('dTo').value;
+  const sel = new Set(selectedSources());
+  updateSourceLabel([...sel]);
+  // Date and source narrow everything, including the button counts
+  const base = ROWS.filter(r => (!from || r[DATE] >= from) && (!to || r[DATE] <= to) && sel.has(r[SOURCE] || BLANK));
+  const rows = filterCol === null ? base : base.filter(r => r[filterCol] === '1');
+  const ones = col => base.filter(r => r[col] === '1').length.toLocaleString('en-IN');
   $('nQL').textContent = ones(16); $('nMS').textContent = ones(17); $('nMD').textContent = ones(18);
   $('tbody').innerHTML = rows.map(r => '<tr>' + r.map(v => `<td>${esc(v)}</td>`).join('') + '</tr>').join('');
   $('count').textContent = `${rows.length.toLocaleString('en-IN')} of ${ROWS.length.toLocaleString('en-IN')} rows`;
 }
+
+$('dFrom').addEventListener('change', render);
+$('dTo').addEventListener('change', render);
+$('sourceMenu').addEventListener('change', e => {
+  if (e.target.id === 'srcAll') document.querySelectorAll('#sourceMenu input[data-source]').forEach(i => { i.checked = e.target.checked; });
+  render();
+});
+document.addEventListener('click', e => { if (!$('source').contains(e.target)) $('source').open = false; });
+$('clear').addEventListener('click', () => {
+  $('dFrom').value = ''; $('dTo').value = '';
+  document.querySelectorAll('#sourceMenu input').forEach(i => { i.checked = true; });
+  render();
+});
 
 document.querySelectorAll('.filter').forEach(btn => btn.addEventListener('click', () => {
   const col = Number(btn.dataset.col);
