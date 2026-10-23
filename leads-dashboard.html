@@ -66,6 +66,12 @@ const HEADERS = [
 
 // Phone numbers in the call center sheet (a cell can hold several, e.g. "98430 / 86100")
 let CALL_CENTER_PHONES = new Set();
+// Call center phones whose Meeting Status is one of these
+const MS_STATUSES = new Set([
+  'Meeting Scheduled', 'Meeting Postponed', 'Meeting Done - Sep MS', 'Meeting Done - Aug MS',
+  'Meeting Done - Jul MS', 'Meeting Incomplete', 'Meeting Done on Sep',
+]);
+let MS_PHONES = new Set();
 
 function phonesIn(text) {
   return (text.match(/\d{10,}/g) || []).map(d => d.slice(-10));
@@ -75,6 +81,7 @@ function toRow(r, i) {
   const [date, time] = splitCreated(r);
   const phone = cleanPhone(r['Phone Number']);
   const ql = phonesIn(phone).some(p => CALL_CENTER_PHONES.has(p)) ? '1' : '';
+  const ms = phonesIn(phone).some(p => MS_PHONES.has(p)) ? '1' : '';
   return [
     String(i + 1), date, time,
     clean(r['Contact First Name']), clean(r['Contact Last Name']), clean(r['Email ID']),
@@ -82,7 +89,7 @@ function toRow(r, i) {
     clean(r['Source Campaign']), clean(r['Source Medium']), clean(r['Source Content']),
     clean(r['Contact Stage']), clean(r['Property City']),
     clean(r['Reason for Not able to Connect']), clean(r['Reason for Dead Lead']),
-    '1', ql, '', '',
+    '1', ql, ms, '',
   ];
 }
 
@@ -112,6 +119,8 @@ Promise.all([getText('data/leads.csv'), getText('data/call-center.csv')])
   .then(([leads, callCenter]) => {
     const cc = Papa.parse(callCenter, { header: true, skipEmptyLines: true }).data;
     CALL_CENTER_PHONES = new Set(cc.flatMap(r => phonesIn(clean(r['Phone number']))));
+    MS_PHONES = new Set(cc.filter(r => MS_STATUSES.has(clean(r['Meeting Status'])))
+      .flatMap(r => phonesIn(clean(r['Phone number']))));
     load(leads);
   })
   .catch(url => { $('count').textContent = `Could not load ${url}`; });
