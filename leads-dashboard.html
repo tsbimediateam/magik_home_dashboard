@@ -72,6 +72,11 @@ const MS_STATUSES = new Set([
   'Meeting Done - Jul MS', 'Meeting Incomplete', 'Meeting Done on Sep',
 ]);
 let MS_PHONES = new Set();
+// Call center phones whose meeting was done
+const MD_STATUSES = new Set([
+  'Meeting Done', 'Meeting Done - Sep MS', 'Meeting Done - Aug MS', 'Meeting Done - Jul MS', 'Meeting Done on Sep',
+]);
+let MD_PHONES = new Set();
 
 function phonesIn(text) {
   return (text.match(/\d{10,}/g) || []).map(d => d.slice(-10));
@@ -82,6 +87,7 @@ function toRow(r, i) {
   const phone = cleanPhone(r['Phone Number']);
   const ql = phonesIn(phone).some(p => CALL_CENTER_PHONES.has(p)) ? '1' : '';
   const ms = phonesIn(phone).some(p => MS_PHONES.has(p)) ? '1' : '';
+  const md = phonesIn(phone).some(p => MD_PHONES.has(p)) ? '1' : '';
   return [
     String(i + 1), date, time,
     clean(r['Contact First Name']), clean(r['Contact Last Name']), clean(r['Email ID']),
@@ -89,7 +95,7 @@ function toRow(r, i) {
     clean(r['Source Campaign']), clean(r['Source Medium']), clean(r['Source Content']),
     clean(r['Contact Stage']), clean(r['Property City']),
     clean(r['Reason for Not able to Connect']), clean(r['Reason for Dead Lead']),
-    '1', ql, ms, '',
+    '1', ql, ms, md,
   ];
 }
 
@@ -120,6 +126,8 @@ Promise.all([getText('data/leads.csv'), getText('data/call-center.csv')])
     const cc = Papa.parse(callCenter, { header: true, skipEmptyLines: true }).data;
     CALL_CENTER_PHONES = new Set(cc.flatMap(r => phonesIn(clean(r['Phone number']))));
     MS_PHONES = new Set(cc.filter(r => MS_STATUSES.has(clean(r['Meeting Status'])))
+      .flatMap(r => phonesIn(clean(r['Phone number']))));
+    MD_PHONES = new Set(cc.filter(r => MD_STATUSES.has(clean(r['Meeting Status'])))
       .flatMap(r => phonesIn(clean(r['Phone number']))));
     load(leads);
   })
