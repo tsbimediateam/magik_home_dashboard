@@ -6,188 +6,30 @@
 <title>Magik Home Leads</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
-:root {
-  color-scheme: light;
-  --bg: #f4f4f2;
-  --surface: #fcfcfb;
-  --border: #e3e2de;
-  --grid: #ecebe7;
-  --text: #0b0b0b;
-  --text-2: #52514e;
-  --text-3: #7a7974;
-  --accent: #2a78d6;
-  --accent-soft: #cde2fb;
-  --track: #f0efec;
-}
-@media (prefers-color-scheme: dark) {
-  :root:where(:not([data-theme="light"])) {
-    color-scheme: dark;
-    --bg: #111110;
-    --surface: #1a1a19;
-    --border: #2e2e2c;
-    --grid: #262624;
-    --text: #f0efec;
-    --text-2: #c3c2b7;
-    --text-3: #8f8e86;
-    --accent: #3987e5;
-    --accent-soft: #184f95;
-    --track: #232321;
-  }
-}
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --bg: #111110;
-  --surface: #1a1a19;
-  --border: #2e2e2c;
-  --grid: #262624;
-  --text: #f0efec;
-  --text-2: #c3c2b7;
-  --text-3: #8f8e86;
-  --accent: #3987e5;
-  --accent-soft: #184f95;
-  --track: #232321;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-}
-header {
-  display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
-  padding: 16px 24px; border-bottom: 1px solid var(--border); background: var(--surface);
-}
-header h1 { font-size: 18px; margin: 0; }
-header .meta { color: var(--text-3); font-size: 12px; }
-main { max-width: 1400px; margin: 0 auto; padding: 20px 24px 48px; }
-button, select, input {
-  font: inherit; color: var(--text); background: var(--surface);
-  border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px;
-}
-button { cursor: pointer; }
-button:hover { border-color: var(--text-3); }
-.filters {
-  display: flex; flex-wrap: wrap; gap: 12px; align-items: end; margin-bottom: 20px;
-}
-.filters label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--text-2); }
-.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px; }
-.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
-.kpi .label { color: var(--text-2); font-size: 12px; }
-.kpi .value { font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums; }
-.kpi .sub { color: var(--text-3); font-size: 12px; }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 16px; margin-bottom: 16px; }
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; min-width: 0; }
-.card h2 { font-size: 14px; margin: 0 0 2px; }
-.card .hint { color: var(--text-3); font-size: 12px; margin: 0 0 12px; }
-.wide { grid-column: 1 / -1; }
-.bars { display: flex; flex-direction: column; gap: 6px; }
-.bar-row { display: grid; grid-template-columns: minmax(120px, 38%) 1fr 64px; gap: 10px; align-items: center; cursor: default; }
-.bar-row .name { color: var(--text-2); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.bar-row .track { height: 14px; background: var(--track); border-radius: 0 4px 4px 0; }
-.bar-row .fill { height: 100%; background: var(--accent); border-radius: 0 4px 4px 0; min-width: 2px; }
-.bar-row .num { text-align: right; font-variant-numeric: tabular-nums; font-size: 12px; }
-.bar-row:hover .fill { filter: brightness(1.15); }
-.bar-row:hover .name { color: var(--text); }
-.more { margin-top: 8px; font-size: 12px; }
-#trend { width: 100%; height: 220px; display: block; }
-#trend text { fill: var(--text-3); font-size: 11px; }
-.tip {
-  position: fixed; pointer-events: none; z-index: 10; display: none;
-  background: var(--surface); color: var(--text); border: 1px solid var(--border);
-  border-radius: 6px; padding: 6px 10px; font-size: 12px; box-shadow: 0 4px 14px rgba(0,0,0,.15);
-}
-.table-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
-.table-tools input { flex: 1 1 240px; }
-.table-wrap { overflow: auto; max-height: 620px; border: 1px solid var(--border); border-radius: 8px; }
-table { border-collapse: collapse; width: 100%; font-size: 12px; }
-th, td { padding: 6px 10px; border-bottom: 1px solid var(--grid); text-align: left; white-space: nowrap; max-width: 280px; overflow: hidden; text-overflow: ellipsis; }
-th { position: sticky; top: 0; background: var(--surface); color: var(--text-2); font-weight: 600; cursor: pointer; user-select: none; }
-th:hover { color: var(--text); }
-tbody tr:hover td { background: var(--track); }
-.pager { display: flex; gap: 8px; align-items: center; margin-top: 10px; color: var(--text-2); font-size: 12px; }
-#loader { background: var(--surface); border: 1px dashed var(--text-3); border-radius: 10px; padding: 32px; text-align: center; }
-#loader p { color: var(--text-2); }
-.hidden { display: none !important; }
-@media (max-width: 600px) {
-  header, main { padding-left: 16px; padding-right: 16px; }
-  .grid { grid-template-columns: 1fr; }
-  .bar-row { grid-template-columns: 40% 1fr 48px; }
-}
+body { margin: 0; padding: 16px; font: 13px/1.4 Arial, sans-serif; background: #fff; color: #000; }
+.bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
+.bar input[type=search] { padding: 5px 8px; width: 260px; max-width: 100%; }
+.wrap { overflow: auto; max-height: calc(100vh - 80px); border: 1px solid #ccc; }
+table { border-collapse: collapse; font-size: 12px; }
+th, td { border: 1px solid #ddd; padding: 4px 8px; white-space: nowrap; text-align: left; }
+th { position: sticky; top: 0; background: #eee; }
+#count { color: #555; }
+.hidden { display: none; }
 </style>
 </head>
 <body>
-<header>
-  <div>
-    <h1>Magik Home – Lead Dashboard</h1>
-    <div class="meta" id="meta">No data loaded</div>
-  </div>
-  <div style="display:flex;gap:8px">
-    <button id="loadBtn" type="button">Load CSV…</button>
-    <button id="themeBtn" type="button" title="Toggle light/dark">◐</button>
-    <input id="file" type="file" accept=".csv,text/csv" class="hidden">
-  </div>
-</header>
-
-<main>
-  <div id="loader">
-    <h2>Load lead data</h2>
-    <p>Choose the LeadSquared CRM export (.csv). The file is read in your browser only – nothing is uploaded.</p>
-    <button id="loadBtn2" type="button">Choose CSV file</button>
-  </div>
-
-  <div id="dash" class="hidden">
-    <div class="filters">
-      <label>From <input type="date" id="fFrom"></label>
-      <label>To <input type="date" id="fTo"></label>
-      <label>Source <select id="fSource"></select></label>
-      <label>Stage group <select id="fStage"></select></label>
-      <label>City <select id="fCity"></select></label>
-      <button id="fReset" type="button">Reset filters</button>
-    </div>
-
-    <div class="kpis" id="kpis"></div>
-
-    <div class="grid">
-      <div class="card wide">
-        <h2>Leads per day</h2>
-        <p class="hint">Created On (AQ)</p>
-        <svg id="trend" role="img" aria-label="Leads per day"></svg>
-      </div>
-      <div class="card"><h2>Contact Source</h2><p class="hint">AE, grouped</p><div class="bars" id="cSource"></div></div>
-      <div class="card"><h2>Contact Stage</h2><p class="hint">AN</p><div class="bars" id="cStage"></div></div>
-      <div class="card"><h2>Funnel group</h2><p class="hint">AN, grouped</p><div class="bars" id="cStageGroup"></div></div>
-      <div class="card"><h2>Property City</h2><p class="hint">CQ, cleaned</p><div class="bars" id="cCity"></div></div>
-      <div class="card"><h2>Source Campaign</h2><p class="hint">AG – paid leads only</p><div class="bars" id="cCampaign"></div></div>
-      <div class="card"><h2>Ad set city</h2><p class="hint">From Source Medium (AH)</p><div class="bars" id="cMediumCity"></div></div>
-      <div class="card"><h2>Source Medium</h2><p class="hint">AH – ad set</p><div class="bars" id="cMedium"></div></div>
-      <div class="card"><h2>Source Content</h2><p class="hint">AI – ad creative</p><div class="bars" id="cContent"></div></div>
-      <div class="card"><h2>Reason for Not able to Connect</h2><p class="hint">EJ</p><div class="bars" id="cNac"></div></div>
-      <div class="card"><h2>Reason for Dead Lead</h2><p class="hint">EK</p><div class="bars" id="cDead"></div></div>
-    </div>
-
-    <div class="card">
-      <h2>Leads</h2>
-      <p class="hint" id="tableHint"></p>
-      <div class="table-tools">
-        <input type="search" id="search" placeholder="Search name, phone, email, campaign…">
-        <button id="export" type="button">Download filtered CSV</button>
-      </div>
-      <div class="table-wrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
-      <div class="pager">
-        <button id="prev" type="button">‹ Prev</button>
-        <span id="pageInfo"></span>
-        <button id="next" type="button">Next ›</button>
-      </div>
-    </div>
-  </div>
-</main>
-<div class="tip" id="tip"></div>
+<div class="bar">
+  <input type="search" id="search" placeholder="Search…">
+  <span id="count">No data loaded</span>
+  <button id="loadBtn" type="button">Load CSV…</button>
+  <input id="file" type="file" accept=".csv,text/csv" class="hidden">
+</div>
+<div class="wrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
 
 <script>
-// ---------- normalisation ----------
 const clean = s => (s ?? '').toString().trim();
 
+// Remove the country code; numbers shorter than 10 digits are kept as they are
 function cleanPhone(v) {
   let s = clean(v);
   if (!s || /^\d{10}$/.test(s)) return s;
@@ -200,308 +42,61 @@ function cleanPhone(v) {
   return d;
 }
 
-function sourceGroup(v) {
-  const s = clean(v), l = s.toLowerCase();
-  if (!s) return 'Unknown';
-  if (l === 'meta' || l === 'online paid - meta' || l.startsWith('ct-fb')) return 'Meta';
-  if (l === 'fb lead ads') return 'FB Lead Ads';
-  if (l === 'google') return 'Google';
-  if (l.includes('walk')) return 'Walk-in';
-  if (l.startsWith('referral')) return 'Referral';
-  return s;
-}
-
-const STAGE_GROUPS = {
-  'New Lead': 'New / Untouched', 'Re-enquired Lead': 'New / Untouched',
-  'Active': 'In contact', 'Not able to Connect': 'In contact',
-  'Meetings Scheduled': 'Meeting stage', 'Meeting Successful': 'Meeting stage',
-  'Meeting Incomplete': 'Meeting stage', 'Meeting Postponed/Cancelled': 'Meeting stage',
-  'Site Measurement Pending': 'Meeting stage', 'Quotation Pending': 'Meeting stage',
-  'Pre-Booking Active': 'Pre-booking', 'Pre-Booking On-Hold': 'Pre-booking',
-  'Booking': 'Won',
-  'Dead Lead': 'Lost', 'Pre-Booking Lost': 'Lost', 'Not Interested': 'Lost',
-};
-const STAGE_ORDER = ['New / Untouched', 'In contact', 'Meeting stage', 'Pre-booking', 'Won', 'Lost', 'Other'];
-const cleanStage = v => clean(v).replace(/Pre-\s+/g, 'Pre-');
-
-function cityGroup(v) {
-  const s = clean(v), l = s.toLowerCase();
-  if (!s) return 'Blank';
-  if (/bangalore|bengaluru/.test(l)) return 'Bangalore';
-  if (/chennai|சென்னை|kilpauk/.test(l)) return 'Chennai';
-  if (/coimbatore/.test(l)) return 'Coimbatore';
-  if (l === 'tirunelveli') return 'Tirunelveli';
-  return 'Not a city';
-}
-
-function mediumCity(v) {
-  const s = clean(v), l = s.toLowerCase();
-  if (!s) return '';
-  if (/^(cpc|paid)$/.test(l)) return 'Google (search)';
-  if (/-(ben|blr)-/.test(l)) return 'Bangalore';
-  if (/-(che|chennai)-/.test(l)) return 'Chennai';
-  if (/-cbe-/.test(l)) return 'Coimbatore';
-  if (/allcities/.test(l)) return 'All cities';
-  return 'Other';
-}
-
-// Accepts the raw export ("Created On" = "YYYY-MM-DD hh:mm:ss AM") or the cleaned one (split columns)
+// Accepts the raw export ("Created On" = "YYYY-MM-DD hh:mm:ss AM") or one already split into date and time
 function splitCreated(r) {
   if (r['Created On Date']) return [clean(r['Created On Date']), clean(r['Created On Time'])];
-  const s = clean(r['Created On']);
-  const i = s.indexOf(' ');
+  const s = clean(r['Created On']), i = s.indexOf(' ');
   return i < 0 ? [s, ''] : [s.slice(0, i), s.slice(i + 1)];
 }
 
-const COLS = [
-  ['date', 'Created On Date'], ['time', 'Created On Time'],
-  ['first', 'Contact First Name'], ['last', 'Contact Last Name'], ['email', 'Email ID'], ['phone', 'Phone Number'],
-  ['source', 'Contact Source'], ['sourceGroup', 'Source Group'],
-  ['campaign', 'Source Campaign'], ['medium', 'Source Medium'], ['content', 'Source Content'],
-  ['stage', 'Contact Stage'], ['stageGroup', 'Funnel Group'],
-  ['city', 'Property City'], ['cityGroup', 'City (clean)'],
-  ['nac', 'Reason for Not able to Connect'], ['dead', 'Reason for Dead Lead'],
+const HEADERS = [
+  'Contact First Name', 'Contact Last Name', 'Email ID', 'Phone Number', 'Contact Source',
+  'Source Campaign', 'Source Medium', 'Source Content', 'Contact Stage',
+  'Created On Date', 'Created On Time', 'Property City',
+  'Reason for Not able to Connect', 'Reason for Dead Lead',
 ];
 
-function toLead(r) {
+function toRow(r) {
   const [date, time] = splitCreated(r);
-  const stage = cleanStage(r['Contact Stage']);
-  return {
-    date, time,
-    first: clean(r['Contact First Name']), last: clean(r['Contact Last Name']),
-    email: clean(r['Email ID']), phone: cleanPhone(r['Phone Number']),
-    source: clean(r['Contact Source']), sourceGroup: sourceGroup(r['Contact Source']),
-    campaign: clean(r['Source Campaign']), medium: clean(r['Source Medium']), content: clean(r['Source Content']),
-    mediumCity: mediumCity(r['Source Medium']),
-    stage, stageGroup: STAGE_GROUPS[stage] || 'Other',
-    city: clean(r['Property City']), cityGroup: cityGroup(r['Property City']),
-    nac: clean(r['Reason for Not able to Connect']), dead: clean(r['Reason for Dead Lead']),
-  };
-}
-
-// ---------- state ----------
-let ALL = [], VIEW = [], TABLE = [];
-let sortKey = 'date', sortDir = -1, page = 0;
-const PAGE = 50;
-const $ = id => document.getElementById(id);
-const fmt = n => n.toLocaleString('en-IN');
-const pct = (a, b) => b ? (100 * a / b).toFixed(1) + '%' : '–';
-
-function loadText(text, label) {
-  const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, transformHeader: h => h.replace(/^﻿/, '').trim() });
-  ALL = parsed.data.filter(r => clean(r['Prospect ID']) || clean(r['Lead Name'])).map(toLead);
-  if (!ALL.length) { alert('No lead rows found in this file.'); return; }
-  const dates = ALL.map(l => l.date).filter(Boolean).sort();
-  $('meta').textContent = `${label} · ${fmt(ALL.length)} leads · ${dates[0]} to ${dates[dates.length - 1]}`;
-  $('fFrom').value = dates[0]; $('fTo').value = dates[dates.length - 1];
-  fillSelect('fSource', ALL.map(l => l.sourceGroup));
-  fillSelect('fStage', ALL.map(l => l.stageGroup), STAGE_ORDER);
-  fillSelect('fCity', ALL.map(l => l.cityGroup));
-  $('loader').classList.add('hidden');
-  $('dash').classList.remove('hidden');
-  render();
-}
-
-function fillSelect(id, values, order) {
-  const counts = countBy(values);
-  let keys = Object.keys(counts);
-  keys = order ? order.filter(k => counts[k]) : keys.sort((a, b) => counts[b] - counts[a]);
-  $(id).innerHTML = '<option value="">All</option>' + keys.map(k => `<option>${esc(k)}</option>`).join('');
-}
-
-function countBy(arr) {
-  const m = {};
-  for (const v of arr) m[v] = (m[v] || 0) + 1;
-  return m;
-}
-const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-
-// ---------- render ----------
-function render() {
-  const from = $('fFrom').value, to = $('fTo').value;
-  const src = $('fSource').value, stg = $('fStage').value, city = $('fCity').value;
-  VIEW = ALL.filter(l =>
-    (!from || l.date >= from) && (!to || l.date <= to) &&
-    (!src || l.sourceGroup === src) && (!stg || l.stageGroup === stg) && (!city || l.cityGroup === city));
-  renderKpis();
-  renderTrend();
-  bars('cSource', VIEW.map(l => l.sourceGroup));
-  bars('cStage', VIEW.map(l => l.stage));
-  bars('cStageGroup', VIEW.map(l => l.stageGroup), { order: STAGE_ORDER });
-  bars('cCity', VIEW.map(l => l.cityGroup));
-  bars('cCampaign', VIEW.map(l => l.campaign).filter(Boolean));
-  bars('cMediumCity', VIEW.map(l => l.mediumCity).filter(Boolean));
-  bars('cMedium', VIEW.map(l => l.medium).filter(Boolean));
-  bars('cContent', VIEW.map(l => l.content).filter(Boolean));
-  bars('cNac', VIEW.map(l => l.nac).filter(Boolean));
-  bars('cDead', VIEW.map(l => l.dead).filter(Boolean));
-  page = 0;
-  renderTable();
-}
-
-function renderKpis() {
-  const n = VIEW.length, g = countBy(VIEW.map(l => l.stageGroup));
-  const deadNoReason = VIEW.filter(l => l.stage === 'Dead Lead' && !l.dead).length;
-  const tiles = [
-    ['Leads', fmt(n), ''],
-    ['Bookings', fmt(g['Won'] || 0), pct(g['Won'] || 0, n) + ' of leads'],
-    ['Meeting / Pre-booking', fmt((g['Meeting stage'] || 0) + (g['Pre-booking'] || 0)), 'currently at these stages'],
-    ['In contact', fmt(g['In contact'] || 0), 'Active + Not able to Connect'],
-    ['New / Untouched', fmt(g['New / Untouched'] || 0), pct(g['New / Untouched'] || 0, n) + ' of leads'],
-    ['Lost', fmt(g['Lost'] || 0), pct(g['Lost'] || 0, n) + ' of leads'],
-    ['Dead without reason', fmt(deadNoReason), 'EK left blank'],
+  return [
+    clean(r['Contact First Name']), clean(r['Contact Last Name']), clean(r['Email ID']),
+    cleanPhone(r['Phone Number']), clean(r['Contact Source']),
+    clean(r['Source Campaign']), clean(r['Source Medium']), clean(r['Source Content']),
+    clean(r['Contact Stage']), date, time, clean(r['Property City']),
+    clean(r['Reason for Not able to Connect']), clean(r['Reason for Dead Lead']),
   ];
-  $('kpis').innerHTML = tiles.map(([a, b, c]) =>
-    `<div class="kpi"><div class="label">${a}</div><div class="value">${b}</div><div class="sub">${c}</div></div>`).join('');
 }
 
-function bars(id, values, opts = {}) {
-  const el = $(id), total = values.length;
-  const counts = countBy(values);
-  let keys = opts.order ? opts.order.filter(k => counts[k]) : Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
-  if (!keys.length) { el.innerHTML = '<p class="hint">No data for the current filters.</p>'; return; }
-  const max = Math.max(...keys.map(k => counts[k]));
-  const expanded = el.dataset.expanded === '1';
-  const LIMIT = 12;
-  const shown = expanded ? keys : keys.slice(0, LIMIT);
-  el.innerHTML = shown.map(k =>
-    `<div class="bar-row" data-tip="${esc(k)}: ${fmt(counts[k])} (${pct(counts[k], total)})">
-       <span class="name" title="${esc(k)}">${esc(k)}</span>
-       <span class="track"><span class="fill" style="display:block;width:${(100 * counts[k] / max).toFixed(2)}%"></span></span>
-       <span class="num">${fmt(counts[k])}</span>
-     </div>`).join('') +
-    (keys.length > LIMIT ? `<button class="more" type="button">${expanded ? 'Show top ' + LIMIT : 'Show all ' + keys.length}</button>` : '');
-  const btn = el.querySelector('.more');
-  if (btn) btn.onclick = () => { el.dataset.expanded = expanded ? '0' : '1'; bars(id, values, opts); };
-}
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+let ROWS = [];
 
-function renderTrend() {
-  const svg = $('trend');
-  const counts = countBy(VIEW.map(l => l.date).filter(Boolean));
-  const from = $('fFrom').value || Object.keys(counts).sort()[0];
-  const to = $('fTo').value || Object.keys(counts).sort().pop();
-  const days = [];
-  if (from && to) for (let d = new Date(from + 'T00:00:00Z'); d <= new Date(to + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + 1))
-    days.push(d.toISOString().slice(0, 10));
-  const W = svg.clientWidth || 800, H = 220, L = 36, R = 12, T = 12, B = 26;
-  if (!days.length) { svg.innerHTML = ''; return; }
-  const ys = days.map(d => counts[d] || 0);
-  const max = Math.max(4, ...ys);
-  const step = Math.ceil(max / 4);
-  const top = step * 4;
-  const x = i => L + (days.length === 1 ? 0 : i * (W - L - R) / (days.length - 1));
-  const y = v => T + (H - T - B) * (1 - v / top);
-  let out = '';
-  for (let v = 0; v <= top; v += step)
-    out += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${v}</text>`;
-  const every = Math.max(1, Math.ceil(days.length / Math.max(2, Math.floor((W - L - R) / 70))));
-  days.forEach((d, i) => {
-    if (i % every === 0) out += `<text x="${x(i)}" y="${H - 6}" text-anchor="middle">${new Date(d + 'T00:00:00Z').toLocaleDateString('en-IN', { day: 'numeric', month: 'short', timeZone: 'UTC' })}</text>`;
-  });
-  const path = ys.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join('');
-  out += `<path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>`;
-  out += `<line id="xh" y1="${T}" y2="${H - B}" stroke="var(--text-3)" stroke-dasharray="3 3" visibility="hidden"/>`;
-  out += `<circle id="xd" r="4" fill="var(--accent)" stroke="var(--surface)" stroke-width="2" visibility="hidden"/>`;
-  out += `<rect x="${L}" y="${T}" width="${W - L - R}" height="${H - T - B}" fill="transparent" id="hit"/>`;
-  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-  svg.innerHTML = out;
-  const hit = svg.querySelector('#hit'), xh = svg.querySelector('#xh'), xd = svg.querySelector('#xd'), tip = $('tip');
-  hit.onmousemove = e => {
-    const rect = svg.getBoundingClientRect();
-    const px = (e.clientX - rect.left) * W / rect.width;
-    const i = Math.max(0, Math.min(days.length - 1, Math.round((px - L) / ((W - L - R) / Math.max(1, days.length - 1)))));
-    xh.setAttribute('x1', x(i)); xh.setAttribute('x2', x(i)); xh.setAttribute('visibility', 'visible');
-    xd.setAttribute('cx', x(i)); xd.setAttribute('cy', y(ys[i])); xd.setAttribute('visibility', 'visible');
-    tip.innerHTML = `<b>${new Date(days[i] + 'T00:00:00Z').toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })}</b><br>${ys[i]} leads`;
-    showTip(e);
-  };
-  hit.onmouseleave = () => { xh.setAttribute('visibility', 'hidden'); xd.setAttribute('visibility', 'hidden'); tip.style.display = 'none'; };
-}
-
-function showTip(e) {
-  const tip = $('tip');
-  tip.style.display = 'block';
-  const w = tip.offsetWidth;
-  tip.style.left = Math.min(window.innerWidth - w - 8, e.clientX + 12) + 'px';
-  tip.style.top = (e.clientY + 14) + 'px';
-}
-document.addEventListener('mousemove', e => {
-  const row = e.target.closest && e.target.closest('.bar-row');
-  if (row) { $('tip').textContent = row.dataset.tip; showTip(e); }
-  else if (!e.target.closest('#trend')) $('tip').style.display = 'none';
-});
-
-function renderTable() {
-  const q = clean($('search').value).toLowerCase();
-  TABLE = q ? VIEW.filter(l => COLS.some(([k]) => l[k].toLowerCase().includes(q))) : VIEW.slice();
-  TABLE.sort((a, b) => {
-    const A = sortKey === 'date' ? a.date + ' ' + to24(a.time) : a[sortKey];
-    const B = sortKey === 'date' ? b.date + ' ' + to24(b.time) : b[sortKey];
-    return A < B ? -sortDir : A > B ? sortDir : 0;
-  });
-  $('thead').innerHTML = '<tr>' + COLS.map(([k, h]) =>
-    `<th data-k="${k}">${esc(h)}${k === sortKey ? (sortDir > 0 ? ' ▲' : ' ▼') : ''}</th>`).join('') + '</tr>';
-  const pages = Math.max(1, Math.ceil(TABLE.length / PAGE));
-  page = Math.min(page, pages - 1);
-  $('tbody').innerHTML = TABLE.slice(page * PAGE, (page + 1) * PAGE).map(l =>
-    '<tr>' + COLS.map(([k]) => `<td title="${esc(l[k])}">${esc(l[k])}</td>`).join('') + '</tr>').join('');
-  $('pageInfo').textContent = `Page ${page + 1} of ${pages}`;
-  $('tableHint').textContent = `${fmt(TABLE.length)} leads match. Click a column header to sort.`;
-  $('prev').disabled = page === 0; $('next').disabled = page >= pages - 1;
-}
-
-function to24(t) {
-  const m = /^(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?$/i.exec(t || '');
-  if (!m) return t || '';
-  let h = +m[1];
-  if (m[4]) { const pm = m[4].toUpperCase() === 'PM'; if (h === 12) h = pm ? 12 : 0; else if (pm) h += 12; }
-  return String(h).padStart(2, '0') + ':' + m[2] + ':' + (m[3] || '00');
-}
-
-function exportCsv() {
-  const csv = Papa.unparse({ fields: COLS.map(c => c[1]), data: TABLE.map(l => COLS.map(([k]) => l[k])) });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' }));
-  a.download = 'leads_filtered.csv';
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-
-// ---------- wiring ----------
-['fFrom', 'fTo', 'fSource', 'fStage', 'fCity'].forEach(id => $(id).addEventListener('change', render));
-$('fReset').onclick = () => {
-  const dates = ALL.map(l => l.date).filter(Boolean).sort();
-  $('fFrom').value = dates[0]; $('fTo').value = dates[dates.length - 1];
-  ['fSource', 'fStage', 'fCity'].forEach(id => $(id).value = '');
+function load(text) {
+  const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, transformHeader: h => h.replace(/^﻿/, '').trim() });
+  ROWS = parsed.data.filter(r => clean(r['Prospect ID']) || clean(r['Lead Name'])).map(toRow);
+  $('thead').innerHTML = '<tr>' + HEADERS.map(h => `<th>${esc(h)}</th>`).join('') + '</tr>';
   render();
-};
-$('search').addEventListener('input', () => { page = 0; renderTable(); });
-$('thead').addEventListener('click', e => {
-  const th = e.target.closest('th'); if (!th) return;
-  if (sortKey === th.dataset.k) sortDir = -sortDir; else { sortKey = th.dataset.k; sortDir = 1; }
-  renderTable();
-});
-$('prev').onclick = () => { page--; renderTable(); };
-$('next').onclick = () => { page++; renderTable(); };
-$('export').onclick = exportCsv;
-$('loadBtn').onclick = $('loadBtn2').onclick = () => $('file').click();
+}
+
+function render() {
+  const q = clean($('search').value).toLowerCase();
+  const rows = q ? ROWS.filter(r => r.some(v => v.toLowerCase().includes(q))) : ROWS;
+  $('tbody').innerHTML = rows.map(r => '<tr>' + r.map(v => `<td>${esc(v)}</td>`).join('') + '</tr>').join('');
+  $('count').textContent = `${rows.length.toLocaleString('en-IN')} of ${ROWS.length.toLocaleString('en-IN')} rows`;
+}
+
+$('search').addEventListener('input', render);
+$('loadBtn').onclick = () => $('file').click();
 $('file').onchange = e => {
-  const f = e.target.files[0]; if (!f) return;
-  f.text().then(t => loadText(t, f.name));
+  const f = e.target.files[0];
+  if (f) f.text().then(load);
   e.target.value = '';
 };
-$('themeBtn').onclick = () => {
-  const dark = getComputedStyle(document.documentElement).colorScheme === 'dark';
-  document.documentElement.dataset.theme = dark ? 'light' : 'dark';
-  try { localStorage.setItem('theme', document.documentElement.dataset.theme); } catch (_) {}
-};
-try { const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (_) {}
-window.addEventListener('resize', () => { if (ALL.length) renderTrend(); });
 
-// Auto-load data/leads.csv if it is published next to this page
+// Loads data/leads.csv automatically when it is published next to this page
 fetch('data/leads.csv', { cache: 'no-store' })
   .then(r => r.ok ? r.text() : Promise.reject())
-  .then(t => loadText(t, 'data/leads.csv'))
+  .then(load)
   .catch(() => {});
 </script>
 </body>
