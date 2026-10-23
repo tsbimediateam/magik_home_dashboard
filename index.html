@@ -48,19 +48,20 @@ function splitCreated(r) {
 }
 
 const HEADERS = [
-  'Contact First Name', 'Contact Last Name', 'Email ID', 'Phone Number', 'Contact Source',
-  'Source Campaign', 'Source Medium', 'Source Content', 'Contact Stage',
-  'Created On Date', 'Created On Time', 'Property City',
+  'Sr. No.', 'Date', 'Time',
+  'Contact First Name', 'Contact Last Name', 'Email ID', 'Phone Number',
+  'Source Campaign', 'Source Medium', 'Source Content', 'Contact Stage', 'Property City',
   'Reason for Not able to Connect', 'Reason for Dead Lead',
 ];
 
-function toRow(r) {
+function toRow(r, i) {
   const [date, time] = splitCreated(r);
   return [
+    String(i + 1), date, time,
     clean(r['Contact First Name']), clean(r['Contact Last Name']), clean(r['Email ID']),
-    cleanPhone(r['Phone Number']), clean(r['Contact Source']),
+    cleanPhone(r['Phone Number']),
     clean(r['Source Campaign']), clean(r['Source Medium']), clean(r['Source Content']),
-    clean(r['Contact Stage']), date, time, clean(r['Property City']),
+    clean(r['Contact Stage']), clean(r['Property City']),
     clean(r['Reason for Not able to Connect']), clean(r['Reason for Dead Lead']),
   ];
 }
@@ -71,7 +72,7 @@ let ROWS = [];
 
 function load(text) {
   const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, transformHeader: h => h.replace(/^﻿/, '').trim() });
-  ROWS = parsed.data.filter(r => clean(r['Prospect ID']) || clean(r['Lead Name'])).map(toRow);
+  ROWS = parsed.data.filter(r => clean(r['Prospect ID']) || clean(r['Lead Name'])).map((r, i) => toRow(r, i));
   $('thead').innerHTML = '<tr>' + HEADERS.map(h => `<th>${esc(h)}</th>`).join('') + '</tr>';
   render();
 }
