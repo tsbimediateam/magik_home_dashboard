@@ -1,65 +1,113 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Leads Dashboard – Magik Home</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Leads Dashboard – Magick Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"inverse-primary":"#b3ccc2","on-tertiary-fixed-variant":"#5f401d","error":"#ba1a1a","on-primary-fixed":"#091f19","on-surface-variant":"#424845","primary-fixed-dim":"#b3ccc2","on-tertiary-fixed":"#2c1700","outline":"#727875","secondary-container":"#d9e2dc","tertiary-container":"#4f3310","on-primary-container":"#8fa89e","surface-bright":"#fcf9f4","primary":"#112721","tertiary":"#361e00","on-error-container":"#93000a","surface-container-low":"#f6f3ee","background":"#fcf9f4","tertiary-fixed-dim":"#ebbe90","on-surface":"#1c1c19","surface-container-highest":"#e5e2dd","on-background":"#1c1c19","on-primary":"#ffffff","surface-tint":"#4c635b","secondary-fixed-dim":"#c0c9c3","primary-fixed":"#cfe8de","on-tertiary":"#ffffff","on-tertiary-container":"#c49b6f","surface-container-high":"#ebe8e3","error-container":"#ffdad6","on-secondary-fixed-variant":"#404944","surface-dim":"#dcdad5","inverse-surface":"#31302d","primary-container":"#273d36","secondary-fixed":"#dce5df","inverse-on-surface":"#f3f0eb","on-secondary-fixed":"#151d1a","secondary":"#58605c","on-secondary":"#ffffff","tertiary-fixed":"#ffdcbb","surface-variant":"#e5e2dd","on-error":"#ffffff","outline-variant":"#c2c8c4","surface-container":"#f0ede9","surface":"#fcf9f4","on-secondary-container":"#5c6560","surface-container-lowest":"#ffffff","on-primary-fixed-variant":"#354b44"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-2xl":"4rem","space-md":"1rem","margin-lg":"4rem","space-xs":"0.25rem","gutter-lg":"2rem","space-xl":"2.5rem","space-lg":"1.5rem","gutter":"1.5rem","margin":"1.5rem","margin-md":"2.5rem","space-sm":"0.5rem"},"fontFamily":{"body-lg":["Inter"],"label-sm":["Inter"],"display":["Inter"],"headline-xl":["Inter"],"body-md":["Inter"],"headline-lg":["Inter"],"body-sm":["Inter"],"metric-display":["Inter"],"headline-xl-mobile":["Inter"],"label-md":["Inter"],"headline-sm":["Inter"]},"fontSize":{"body-lg":["1.125rem",{"lineHeight":"1.75rem","letterSpacing":"-0.01em","fontWeight":"400"}],"label-sm":["0.75rem",{"lineHeight":"1rem","letterSpacing":"0.04em","fontWeight":"600"}],"display":["3.5rem",{"lineHeight":"4rem","letterSpacing":"-0.03em","fontWeight":"300"}],"headline-xl":["2.5rem",{"lineHeight":"3rem","letterSpacing":"-0.025em","fontWeight":"400"}],"body-md":["0.9375rem",{"lineHeight":"1.5rem","letterSpacing":"0em","fontWeight":"400"}],"headline-lg":["1.75rem",{"lineHeight":"2.25rem","letterSpacing":"-0.02em","fontWeight":"500"}],"body-sm":["0.8125rem",{"lineHeight":"1.25rem","letterSpacing":"0.005em","fontWeight":"400"}],"metric-display":["2.25rem",{"lineHeight":"2.75rem","letterSpacing":"-0.03em","fontWeight":"300"}],"headline-xl-mobile":["2rem",{"lineHeight":"2.5rem","letterSpacing":"-0.02em","fontWeight":"400"}],"label-md":["0.875rem",{"lineHeight":"1.25rem","letterSpacing":"0.01em","fontWeight":"500"}],"headline-sm":["1.25rem",{"lineHeight":"1.75rem","letterSpacing":"-0.01em","fontWeight":"500"}]}}}}</script>
 <style>
-body { margin: 0; padding: 16px; font: 13px/1.4 Arial, sans-serif; background: #fff; color: #000; }
-.bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
-.filter { font: inherit; padding: 8px 16px; border: 1px solid #bbb; border-radius: 20px; background: #f5f5f5; color: #000; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,.15); }
-.filter:hover { background: #e8e8e8; }
-.filter b { margin-left: 4px; }
-.filter[aria-pressed="true"] { background: #1f5fbf; border-color: #1f5fbf; color: #fff; }
-.wrap { overflow: auto; max-height: calc(100vh - 190px); border: 1px solid #ccc; }
-table { border-collapse: collapse; font-size: 12px; }
-th, td { border: 1px solid #ddd; padding: 4px 8px; white-space: nowrap; text-align: left; }
-th { position: sticky; top: 0; background: #eee; }
-#count { color: #555; }
-.filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 10px; }
-.filters label { display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: #444; }
-.filters input[type=date], .filters summary, .filters .clear { font: inherit; font-size: 13px; padding: 5px 8px; border: 1px solid #bbb; border-radius: 4px; background: #fff; color: #000; }
-.filters .clear { background: #f5f5f5; cursor: pointer; }
-.source { position: relative; }
-.source summary { list-style: none; cursor: pointer; min-width: 180px; }
-.source summary::-webkit-details-marker { display: none; }
-.source summary::after { content: " ▾"; float: right; }
-.source .menu { position: absolute; z-index: 5; top: 100%; left: 0; margin-top: 2px; background: #fff; border: 1px solid #bbb; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,.15); padding: 6px; max-height: 320px; overflow: auto; min-width: 240px; }
-.source .menu label { flex-direction: row; align-items: center; gap: 6px; padding: 3px 4px; color: #000; font-size: 13px; white-space: nowrap; cursor: pointer; }
-.source .menu label:hover { background: #f0f0f0; }
-.source .menu .all { border-bottom: 1px solid #ddd; margin-bottom: 4px; padding-bottom: 6px; }
-.hidden { display: none; }
-.nav { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
-.nav h1 { font-size: 18px; margin: 0 0 0 8px; }
-.nav button, .nav .btn { font: inherit; padding: 5px 12px; border: 1px solid #bbb; border-radius: 4px; background: #f5f5f5; color: #000; text-decoration: none; cursor: pointer; }
-.nav button:hover, .nav .btn:hover { background: #e8e8e8; }
+body { font-family: Inter, sans-serif; }
+.table-scroll { scrollbar-width: thin; scrollbar-color: #d9e2dc transparent; }
+.kpi[aria-pressed="true"] { background: #273d36; color: #fff; }
+.kpi[aria-pressed="true"] .kpi-label, .kpi[aria-pressed="true"] .kpi-num { color: #fff; }
 </style>
 </head>
-<body>
-<div class="nav">
-  <button type="button" onclick="history.length > 1 ? history.back() : location.href = 'index.html'">&larr; Back</button>
-  <a class="btn" href="index.html">Home</a>
-  <h1>Leads Dashboard</h1>
+<body class="bg-surface font-body-md text-on-surface antialiased">
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/95 backdrop-blur-md shadow-[0_1px_6px_rgba(39,61,54,0.03)] border-b-2 border-b-[#E87524]">
+  <div class="h-20 max-w-[1440px] mx-auto px-6 md:px-8 flex items-center justify-between">
+    <a class="flex items-center gap-space-md" href="index.html">
+      <img alt="MH Logo.png" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WGR968xMuN_eH3VlqT_pAcWpbzvx38wXFQqbp7dN80bk_0IrpU36jTg09lYs_ABoca2BiM35oOZquvZmsNQ31RWvRJ7UxPJZ7qNmncsFW--xVtzJNqC34HEiO53KUl-cDkzOwRBFU4AlDwUzqv4UHwHtd9G3S0ntK-QR5TEuuD2j1qyhvJrQT5se3qH63e3dXTIkzxUpAj1SzBmCgInsOPCagCcy9mIA0gSYogUZAqtoGMaYZNAri7wOVVvXklqbHSZcjK0Kqy4-A"/>
+      <div class="h-6 w-px bg-outline-variant"></div>
+      <span class="font-headline-sm text-headline-sm text-primary-container tracking-tight">Leads Dashboard</span>
+    </a>
+    <nav class="flex items-center gap-space-sm">
+      <button type="button" onclick="history.length > 1 ? history.back() : location.href = 'index.html'" class="inline-flex items-center px-space-md py-space-xs rounded-lg border border-outline-variant bg-secondary-container text-primary-container font-semibold font-label-md text-label-md transition-colors hover:border-[#E87524]">Back</button>
+      <a href="index.html" class="inline-flex items-center px-space-md py-space-xs rounded-lg border border-outline-variant bg-surface-container-lowest font-label-md text-label-md text-on-surface-variant transition-colors hover:border-[#E87524] hover:text-[#E87524]">Home</a>
+    </nav>
+  </div>
+</header>
+
+<main class="w-full pt-20 bg-surface min-h-screen">
+<div class="w-full max-w-[1440px] mx-auto px-6 md:px-8 py-6 flex flex-col gap-6">
+
+  <div class="w-full bg-surface-container-lowest rounded-xl p-5 shadow-sm flex flex-col md:flex-row md:items-end justify-between gap-4 relative z-30">
+    <div class="flex flex-wrap items-end gap-4">
+      <div class="flex flex-col gap-1.5">
+        <label class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1" for="dFrom">
+          <span class="material-symbols-outlined text-[16px] text-outline">calendar_today</span>From</label>
+        <input id="dFrom" type="date" class="w-44 h-[42px] px-3.5 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg border border-outline-variant/50 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#E87524]/40">
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1" for="dTo">
+          <span class="material-symbols-outlined text-[16px] text-outline">event</span>To</label>
+        <input id="dTo" type="date" class="w-44 h-[42px] px-3.5 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg border border-outline-variant/50 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#E87524]/40">
+      </div>
+      <div class="flex flex-col gap-1.5 min-w-[230px]">
+        <span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px] text-outline">tune</span>Source</span>
+        <details class="relative" id="source">
+          <summary class="list-none w-full h-[42px] px-3.5 pr-10 flex items-center bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg border border-outline-variant/50 shadow-sm cursor-pointer [&::-webkit-details-marker]:hidden">
+            <span id="sourceLabel" class="truncate">All sources</span>
+            <span class="pointer-events-none absolute right-3 top-[21px] -translate-y-1/2 material-symbols-outlined text-outline text-[18px]">expand_more</span>
+          </summary>
+          <div id="sourceMenu" class="absolute left-0 top-full mt-1 min-w-[260px] max-h-80 overflow-auto bg-surface-container-lowest rounded-lg shadow-lg border border-outline-variant/50 p-1.5"></div>
+        </details>
+      </div>
+      <button id="clear" type="button" class="h-[42px] px-4 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:text-primary font-label-md text-label-md shadow-sm border border-outline-variant/50 transition-all hover:bg-surface-container-low active:scale-95 flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-[18px] text-outline">filter_alt_off</span>Clear filters</button>
+    </div>
+    <div class="flex items-center gap-2 self-end md:self-auto">
+      <button id="export" type="button" class="h-[42px] px-3.5 bg-surface-container-lowest text-on-surface-variant hover:text-primary rounded-lg shadow-sm border border-outline-variant/50 flex items-center gap-1.5 font-label-md text-label-md hover:bg-surface-container-low transition-colors">
+        <span class="material-symbols-outlined text-[18px]">download</span><span>Export CSV</span></button>
+      <button id="reset" type="button" title="Reset filters, buttons and sorting" class="h-[42px] w-[42px] bg-primary text-on-primary rounded-lg shadow-sm flex items-center justify-center hover:bg-primary-container transition-colors">
+        <span class="material-symbols-outlined text-[18px]">refresh</span></button>
+    </div>
+  </div>
+
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="flex flex-wrap items-center gap-3">
+      <button type="button" class="kpi flex items-center gap-3 px-5 py-2.5 bg-surface-container-lowest rounded-full shadow-sm hover:shadow-md transition-all" data-col="16" aria-pressed="false">
+        <span class="w-2.5 h-2.5 rounded-full bg-tertiary-fixed-dim"></span>
+        <span class="kpi-label font-body-md text-body-md text-on-surface-variant">Quality Leads:</span>
+        <span id="nQL" class="kpi-num font-headline-sm text-headline-sm text-primary font-semibold tracking-tight">–</span>
+      </button>
+      <button type="button" class="kpi flex items-center gap-3 px-5 py-2.5 bg-surface-container-lowest rounded-full shadow-sm hover:shadow-md transition-all" data-col="17" aria-pressed="false">
+        <span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+        <span class="kpi-label font-body-md text-body-md text-on-surface-variant">Meetings Scheduled:</span>
+        <span id="nMS" class="kpi-num font-headline-sm text-headline-sm text-primary font-semibold tracking-tight">–</span>
+      </button>
+      <button type="button" class="kpi flex items-center gap-3 px-5 py-2.5 bg-surface-container-lowest rounded-full shadow-sm hover:shadow-md transition-all" data-col="18" aria-pressed="false">
+        <span class="w-2.5 h-2.5 rounded-full bg-surface-tint"></span>
+        <span class="kpi-label font-body-md text-body-md text-on-surface-variant">Meetings Done:</span>
+        <span id="nMD" class="kpi-num font-headline-sm text-headline-sm text-primary font-semibold tracking-tight">–</span>
+      </button>
+    </div>
+    <div class="flex items-center gap-2 px-3 py-1.5 text-on-surface-variant font-body-sm text-body-sm self-start sm:self-center">
+      <span class="w-2 h-2 rounded-full bg-primary-fixed-dim"></span>
+      <span id="count">Loading…</span>
+    </div>
+  </div>
+
+  <div class="w-full bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+    <div class="table-scroll overflow-x-auto overflow-y-auto max-h-[620px] relative">
+      <table class="w-full text-left font-body-md text-body-md border-collapse">
+        <thead class="sticky top-0 z-20 bg-primary-container text-on-primary text-label-sm font-label-sm uppercase tracking-wider select-none shadow-sm">
+          <tr id="thead"></tr>
+        </thead>
+        <tbody id="tbody" class="text-on-surface text-body-sm font-body-sm"></tbody>
+      </table>
+    </div>
+    <div class="px-6 py-4 bg-surface-container-lowest flex flex-col sm:flex-row items-center justify-between gap-4 select-none">
+      <div id="showing" class="text-on-surface-variant font-body-sm text-body-sm"></div>
+      <div id="pager" class="flex items-center gap-1.5"></div>
+    </div>
+  </div>
 </div>
-<div class="filters">
-  <label>From <input type="date" id="dFrom"></label>
-  <label>To <input type="date" id="dTo"></label>
-  <label>Source
-    <details class="source" id="source">
-      <summary id="sourceLabel">All sources</summary>
-      <div class="menu" id="sourceMenu"></div>
-    </details>
-  </label>
-  <button type="button" class="clear" id="clear">Clear filters</button>
-</div>
-<div class="bar">
-  <button type="button" class="filter" data-col="16" aria-pressed="false">Quality Leads: <b id="nQL">–</b></button>
-  <button type="button" class="filter" data-col="17" aria-pressed="false">Meetings Scheduled: <b id="nMS">–</b></button>
-  <button type="button" class="filter" data-col="18" aria-pressed="false">Meetings Done: <b id="nMD">–</b></button>
-  <span id="count">Loading…</span>
-</div>
-<div class="wrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+</main>
 
 <script>
 const clean = s => (s ?? '').toString().trim();
@@ -129,33 +177,52 @@ function toRow(r, i) {
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-let ROWS = [];
+const fmt = n => n.toLocaleString('en-IN');
+const DATE = 1, SOURCE = 7, BLANK = '(Blank)', PAGE = 50;
+let ROWS = [], VIEW = [], SOURCES = [], page = 0, filterCol = null, sortCol = null, sortAsc = true;
 
-function load(text) {
-  const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, transformHeader: h => h.replace(/^﻿/, '').trim() });
-  ROWS = parsed.data.filter(r => clean(r['Prospect ID']) || clean(r['Lead Name'])).map((r, i) => toRow(r, i));
-  $('thead').innerHTML = '<tr>' + HEADERS.map(h => `<th>${esc(h)}</th>`).join('') + '</tr>';
-  const dates = ROWS.map(r => r[DATE]).filter(Boolean).sort();
-  $('dFrom').min = $('dTo').min = dates[0];
-  $('dFrom').max = $('dTo').max = dates[dates.length - 1];
-  buildSourceMenu();
-  render();
+// Pill colours for Contact Source, from the design
+const PILL = {
+  'Meta': 'bg-surface-container text-on-surface-variant',
+  'Business Affiliate Partner': 'bg-secondary-container text-primary-container',
+  'Organic': 'bg-primary-fixed text-primary',
+  'Branding - Walk In': 'bg-secondary-fixed text-on-secondary-fixed',
+  'Inbound Phone call': 'bg-tertiary-container text-on-tertiary',
+};
+const pillClass = v => PILL[v] || (v.startsWith('Referral') ? 'bg-tertiary-fixed text-on-tertiary-fixed' : 'bg-surface-variant text-on-surface-variant');
+
+function cell(v, c) {
+  const px = c < 3 ? 'px-4' : 'px-5';
+  if (c === 0) return `<td class="py-3 px-4 text-center font-semibold text-on-surface-variant">${esc(v)}</td>`;
+  if (!v) return `<td class="py-3 ${px} text-outline">—</td>`;
+  if (c === 2) return `<td class="py-3 px-4 text-on-surface-variant whitespace-nowrap">${esc(v)}</td>`;
+  if (c === 4) return `<td class="py-3 px-5 text-on-surface whitespace-nowrap">${esc(v)}</td>`;
+  if (c === SOURCE) return `<td class="py-3 px-5"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold whitespace-nowrap ${pillClass(v)}">${esc(v)}</span></td>`;
+  if (c >= 15) return `<td class="py-3 px-5 text-center font-semibold text-primary">${esc(v)}</td>`;
+  if (c >= 8) return `<td class="py-3 px-5 text-on-surface whitespace-nowrap">${esc(v)}</td>`;
+  return `<td class="py-3 ${px} text-on-surface font-medium whitespace-nowrap">${esc(v)}</td>`;
 }
 
-// Column index of the active filter button (QL 16, MS 17, MD 18), or null for all rows
-let filterCol = null;
-
-const DATE = 1, SOURCE = 7, BLANK = '(Blank)';
-let SOURCES = [];
-const selectedSources = () => [...document.querySelectorAll('#sourceMenu input[data-source]:checked')].map(i => i.dataset.source);
+function renderHead() {
+  $('thead').innerHTML = HEADERS.map((h, c) => {
+    const icon = sortCol === c ? (sortAsc ? 'arrow_upward' : 'arrow_downward') : 'unfold_more';
+    return `<th scope="col" class="py-3.5 ${c < 3 ? 'px-4' : 'px-5'} font-semibold whitespace-nowrap ${c === 0 || c >= 15 ? 'text-center' : ''}">
+      <button type="button" data-col="${c}" class="inline-flex items-center gap-1 uppercase tracking-wider hover:text-secondary-fixed">
+        <span>${esc(h)}</span><span class="material-symbols-outlined text-[14px]">${icon}</span></button></th>`;
+  }).join('');
+}
 
 function buildSourceMenu() {
   const counts = {};
   ROWS.forEach(r => { const k = r[SOURCE] || BLANK; counts[k] = (counts[k] || 0) + 1; });
   SOURCES = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
-  $('sourceMenu').innerHTML = '<label class="all"><input type="checkbox" id="srcAll" checked> Select all</label>' +
-    SOURCES.map(k => `<label><input type="checkbox" data-source="${esc(k)}" checked> ${esc(k)} (${counts[k]})</label>`).join('');
+  const item = 'flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-surface-container-low cursor-pointer font-body-sm text-body-sm text-on-surface whitespace-nowrap';
+  $('sourceMenu').innerHTML =
+    `<label class="${item} border-b border-outline-variant/50 mb-1 pb-2 font-semibold"><input type="checkbox" id="srcAll" checked class="accent-[#273d36]"> Select all</label>` +
+    SOURCES.map(k => `<label class="${item}"><input type="checkbox" data-source="${esc(k)}" checked class="accent-[#273d36]"> ${esc(k)} <span class="text-outline ml-auto pl-3">${fmt(counts[k])}</span></label>`).join('');
 }
+
+const selectedSources = () => [...document.querySelectorAll('#sourceMenu input[data-source]:checked')].map(i => i.dataset.source);
 
 function updateSourceLabel(sel) {
   $('srcAll').checked = sel.length === SOURCES.length;
@@ -165,38 +232,97 @@ function updateSourceLabel(sel) {
     : sel.length === 1 ? sel[0] : `${sel.length} sources selected`;
 }
 
-function render() {
+function apply() {
   const from = $('dFrom').value, to = $('dTo').value;
   const sel = new Set(selectedSources());
   updateSourceLabel([...sel]);
   // Date and source narrow everything, including the button counts
   const base = ROWS.filter(r => (!from || r[DATE] >= from) && (!to || r[DATE] <= to) && sel.has(r[SOURCE] || BLANK));
-  const rows = filterCol === null ? base : base.filter(r => r[filterCol] === '1');
-  const ones = col => base.filter(r => r[col] === '1').length.toLocaleString('en-IN');
+  const ones = col => fmt(base.filter(r => r[col] === '1').length);
   $('nQL').textContent = ones(16); $('nMS').textContent = ones(17); $('nMD').textContent = ones(18);
-  $('tbody').innerHTML = rows.map(r => '<tr>' + r.map(v => `<td>${esc(v)}</td>`).join('') + '</tr>').join('');
-  $('count').textContent = `${rows.length.toLocaleString('en-IN')} of ${ROWS.length.toLocaleString('en-IN')} rows`;
+  VIEW = filterCol === null ? base : base.filter(r => r[filterCol] === '1');
+  if (sortCol !== null) {
+    VIEW = VIEW.slice().sort((a, b) => {
+      const d = sortCol === 0 ? a[0] - b[0] : a[sortCol].localeCompare(b[sortCol], undefined, { numeric: true, sensitivity: 'base' });
+      return sortAsc ? d : -d;
+    });
+  }
+  page = 0;
+  render();
 }
 
-$('dFrom').addEventListener('change', render);
-$('dTo').addEventListener('change', render);
-$('sourceMenu').addEventListener('change', e => {
-  if (e.target.id === 'srcAll') document.querySelectorAll('#sourceMenu input[data-source]').forEach(i => { i.checked = e.target.checked; });
-  render();
-});
-document.addEventListener('click', e => { if (!$('source').contains(e.target)) $('source').open = false; });
-$('clear').addEventListener('click', () => {
+function render() {
+  const pages = Math.max(1, Math.ceil(VIEW.length / PAGE));
+  page = Math.min(page, pages - 1);
+  const start = page * PAGE, slice = VIEW.slice(start, start + PAGE);
+  $('tbody').innerHTML = slice.map((r, i) =>
+    `<tr class="${i % 2 ? 'bg-surface-container-low hover:bg-secondary-container' : 'bg-surface-container-lowest hover:bg-surface-container-low'} transition-colors duration-150">` +
+    r.map(cell).join('') + '</tr>').join('');
+  $('count').innerHTML = `Showing <strong class="text-on-surface font-semibold">${fmt(VIEW.length)}</strong> of ${fmt(ROWS.length)} records`;
+  const n = s => `<span class="font-medium text-on-surface">${fmt(s)}</span>`;
+  $('showing').innerHTML = VIEW.length ? `Showing ${n(start + 1)} to ${n(start + slice.length)} of ${n(VIEW.length)} records` : 'No records match the filters';
+  renderPager(pages);
+}
+
+function renderPager(pages) {
+  const icon = (p, name, off) => `<button type="button" data-page="${p}" ${off ? 'disabled' : ''} class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors disabled:opacity-40"><span class="material-symbols-outlined text-[18px]">${name}</span></button>`;
+  const nums = [...new Set([0, 1, page - 1, page, page + 1, pages - 2, pages - 1])].filter(p => p >= 0 && p < pages).sort((a, b) => a - b);
+  let html = icon(0, 'keyboard_double_arrow_left', page === 0) + icon(page - 1, 'chevron_left', page === 0);
+  nums.forEach((p, i) => {
+    if (i && p - nums[i - 1] > 1) html += '<span class="px-1 text-outline font-label-md text-label-md">...</span>';
+    html += p === page
+      ? `<span class="w-8 h-8 rounded-lg bg-primary text-on-primary font-label-md text-label-md flex items-center justify-center">${p + 1}</span>`
+      : `<button type="button" data-page="${p}" class="w-8 h-8 rounded-lg text-on-surface-variant hover:bg-surface-container-low font-label-md text-label-md flex items-center justify-center transition-colors">${p + 1}</button>`;
+  });
+  html += icon(page + 1, 'chevron_right', page >= pages - 1) + icon(pages - 1, 'keyboard_double_arrow_right', page >= pages - 1);
+  $('pager').innerHTML = html;
+}
+
+function setFilterCol(col) {
+  filterCol = col;
+  document.querySelectorAll('.kpi').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.col) === filterCol)));
+}
+
+function exportCsv() {
+  const csv = Papa.unparse({ fields: HEADERS, data: VIEW });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv' }));
+  a.download = 'MagickHome_Leads_Dashboard.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function clearFilters() {
   $('dFrom').value = ''; $('dTo').value = '';
   document.querySelectorAll('#sourceMenu input').forEach(i => { i.checked = true; });
-  render();
-});
+}
 
-document.querySelectorAll('.filter').forEach(btn => btn.addEventListener('click', () => {
+$('dFrom').addEventListener('change', apply);
+$('dTo').addEventListener('change', apply);
+$('sourceMenu').addEventListener('change', e => {
+  if (e.target.id === 'srcAll') document.querySelectorAll('#sourceMenu input[data-source]').forEach(i => { i.checked = e.target.checked; });
+  apply();
+});
+document.addEventListener('click', e => { if (!$('source').contains(e.target)) $('source').open = false; });
+$('clear').addEventListener('click', () => { clearFilters(); apply(); });
+$('reset').addEventListener('click', () => { clearFilters(); setFilterCol(null); sortCol = null; sortAsc = true; renderHead(); apply(); });
+$('export').addEventListener('click', exportCsv);
+document.querySelectorAll('.kpi').forEach(btn => btn.addEventListener('click', () => {
   const col = Number(btn.dataset.col);
-  filterCol = filterCol === col ? null : col;
-  document.querySelectorAll('.filter').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.col) === filterCol)));
-  render();
+  setFilterCol(filterCol === col ? null : col);
+  apply();
 }));
+$('thead').addEventListener('click', e => {
+  const b = e.target.closest('button[data-col]'); if (!b) return;
+  const c = Number(b.dataset.col);
+  if (sortCol === c) sortAsc = !sortAsc; else { sortCol = c; sortAsc = true; }
+  renderHead(); apply();
+});
+$('pager').addEventListener('click', e => {
+  const b = e.target.closest('button[data-page]'); if (!b || b.disabled) return;
+  page = Number(b.dataset.page); render();
+  document.querySelector('.table-scroll').scrollTop = 0;
+});
 
 const getText = url => fetch(url, { cache: 'no-store' }).then(r => r.ok ? r.text() : Promise.reject(url));
 
@@ -208,7 +334,12 @@ Promise.all([getText('data/leads.csv'), getText('data/call-center.csv')])
       .flatMap(r => phonesIn(clean(r['Phone number']))));
     MD_PHONES = new Set(cc.filter(r => MD_STATUSES.has(clean(r['Meeting Status'])))
       .flatMap(r => phonesIn(clean(r['Phone number']))));
-    load(leads);
+    const parsed = Papa.parse(leads, { header: true, skipEmptyLines: true, transformHeader: h => h.replace(/^\ufeff/, '').trim() });
+    ROWS = parsed.data.filter(r => clean(r['Prospect ID']) || clean(r['Lead Name'])).map((r, i) => toRow(r, i));
+    const dates = ROWS.map(r => r[DATE]).filter(Boolean).sort();
+    $('dFrom').min = $('dTo').min = dates[0];
+    $('dFrom').max = $('dTo').max = dates[dates.length - 1];
+    buildSourceMenu(); renderHead(); apply();
   })
   .catch(url => { $('count').textContent = `Could not load ${url}`; });
 </script>
