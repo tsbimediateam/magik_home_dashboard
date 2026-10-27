@@ -1,57 +1,193 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Call Center Data – Magik Home</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Call Center Data – Magick Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"background":"#fcf9f4","surface-dim":"#dcdad5","on-tertiary":"#ffffff","inverse-primary":"#b3ccc2","secondary-container":"#d9e2dc","on-background":"#1c1c19","surface-tint":"#4c635b","on-primary":"#ffffff","error-container":"#ffdad6","on-primary-container":"#8fa89e","primary-fixed-dim":"#b3ccc2","on-secondary-container":"#5c6560","secondary":"#58605c","surface-container-high":"#ebe8e3","secondary-fixed":"#dce5df","tertiary-container":"#4f3310","surface-variant":"#e5e2dd","on-error":"#ffffff","outline-variant":"#c2c8c4","surface":"#fcf9f4","on-primary-fixed":"#091f19","on-tertiary-container":"#c49b6f","error":"#ba1a1a","surface-container-lowest":"#ffffff","tertiary-fixed":"#ffdcbb","outline":"#727875","surface-container":"#f0ede9","on-tertiary-fixed-variant":"#5f401d","inverse-surface":"#31302d","on-error-container":"#93000a","primary-container":"#273d36","inverse-on-surface":"#f3f0eb","surface-container-highest":"#e5e2dd","on-secondary":"#ffffff","tertiary":"#361e00","primary":"#112721","secondary-fixed-dim":"#c0c9c3","on-secondary-fixed":"#151d1a","surface-bright":"#fcf9f4","tertiary-fixed-dim":"#ebbe90","on-primary-fixed-variant":"#354b44","on-tertiary-fixed":"#2c1700","surface-container-low":"#f6f3ee","primary-fixed":"#cfe8de","on-surface":"#1c1c19","on-secondary-fixed-variant":"#404944","on-surface-variant":"#424845"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-xs":"0.25rem","space-xl":"2.5rem","margin-lg":"4rem","gutter-lg":"2rem","space-2xl":"4rem","margin-md":"2.5rem","space-sm":"0.5rem","space-md":"1rem","space-lg":"1.5rem","gutter":"1.5rem","margin":"1.5rem"},fontFamily:{"headline-xl":["Inter"],"body-lg":["Inter"],"metric-display":["Inter"],"display":["Inter"],"body-md":["Inter"],"headline-lg":["Inter"],"headline-sm":["Inter"],"headline-xl-mobile":["Inter"],"label-md":["Inter"],"body-sm":["Inter"],"label-sm":["Inter"]},fontSize:{"headline-xl":["2.5rem",{"lineHeight":"3rem","letterSpacing":"-0.025em","fontWeight":"400"}],"body-lg":["1.125rem",{"lineHeight":"1.75rem","letterSpacing":"-0.01em","fontWeight":"400"}],"metric-display":["2.25rem",{"lineHeight":"2.75rem","letterSpacing":"-0.03em","fontWeight":"300"}],"display":["3.5rem",{"lineHeight":"4rem","letterSpacing":"-0.03em","fontWeight":"300"}],"body-md":["0.9375rem",{"lineHeight":"1.5rem","letterSpacing":"0em","fontWeight":"400"}],"headline-lg":["1.75rem",{"lineHeight":"2.25rem","letterSpacing":"-0.02em","fontWeight":"500"}],"headline-sm":["1.25rem",{"lineHeight":"1.75rem","letterSpacing":"-0.01em","fontWeight":"500"}],"headline-xl-mobile":["2rem",{"lineHeight":"2.5rem","letterSpacing":"-0.02em","fontWeight":"400"}],"label-md":["0.875rem",{"lineHeight":"1.25rem","letterSpacing":"0.01em","fontWeight":"500"}],"body-sm":["0.8125rem",{"lineHeight":"1.25rem","letterSpacing":"0.005em","fontWeight":"400"}],"label-sm":["0.75rem",{"lineHeight":"1rem","letterSpacing":"0.04em","fontWeight":"600"}]}}}}</script>
 <style>
-body { margin: 0; padding: 16px; font: 14px/1.4 Arial, sans-serif; background: #fff; color: #000; }
-.nav { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
-.nav h1 { font-size: 18px; margin: 0 0 0 8px; }
-.nav button, .nav .btn { font: inherit; font-size: 13px; padding: 5px 12px; border: 1px solid #bbb; border-radius: 4px; background: #f5f5f5; color: #000; text-decoration: none; cursor: pointer; }
-.nav button:hover, .nav .btn:hover { background: #e8e8e8; }
-.bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
-.bar input[type=search] { padding: 5px 8px; width: 260px; max-width: 100%; }
-.wrap { overflow: auto; max-height: calc(100vh - 120px); border: 1px solid #ccc; }
-table { border-collapse: collapse; font-size: 12px; }
-th, td { border: 1px solid #ddd; padding: 4px 8px; white-space: nowrap; text-align: left; }
-th { position: sticky; top: 0; background: #eee; }
-#count { color: #555; }
+body { font-family: Inter, sans-serif; }
+.table-scroll { scrollbar-width: thin; scrollbar-color: #d9e2dc transparent; }
 </style>
 </head>
-<body>
-<div class="nav">
-  <button type="button" onclick="history.length > 1 ? history.back() : location.href = 'index.html'">&larr; Back</button>
-  <a class="btn" href="index.html">Home</a>
-  <h1>Call Center Data</h1>
+<body class="bg-surface font-body-md text-body-md text-on-surface antialiased">
+<header class="fixed top-0 left-0 w-full z-50 bg-surface/95 backdrop-blur-md">
+  <div class="h-16 w-full px-6 lg:px-8 flex items-center justify-between">
+    <a class="flex items-center gap-6" href="index.html">
+      <img alt="MH Logo.png" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WGR968xMuN_eH3VlqT_pAcWpbzvx38wXFQqbp7dN80bk_0IrpU36jTg09lYs_ABoca2BiM35oOZquvZmsNQ31RWvRJ7UxPJZ7qNmncsFW--xVtzJNqC34HEiO53KUl-cDkzOwRBFU4AlDwUzqv4UHwHtd9G3S0ntK-QR5TEuuD2j1qyhvJrQT5se3qH63e3dXTIkzxUpAj1SzBmCgInsOPCagCcy9mIA0gSYogUZAqtoGMaYZNAri7wOVVvXklqbHSZcjK0Kqy4-A"/>
+      <span class="h-5 w-px bg-outline-variant/60"></span>
+      <span class="font-label-md text-label-md tracking-wider text-on-surface uppercase">Call Center Data</span>
+    </a>
+    <nav class="flex items-center gap-3">
+      <button type="button" onclick="history.length > 1 ? history.back() : location.href = 'index.html'" class="px-4 py-1.5 rounded-lg bg-surface-container-lowest border border-outline-variant text-on-surface font-label-md text-label-md hover:border-tertiary-fixed-variant hover:text-tertiary-container transition-colors">Back</button>
+      <a href="index.html" class="px-4 py-1.5 rounded-lg bg-surface-container-lowest border border-outline-variant text-on-surface font-label-md text-label-md hover:border-tertiary-fixed-variant hover:text-tertiary-container transition-colors">Home</a>
+    </nav>
+  </div>
+  <div class="h-0.5 w-full bg-tertiary-fixed-variant/80"></div>
+</header>
+
+<main class="w-full pt-16 bg-surface px-6 lg:px-8 min-h-screen">
+<div class="flex flex-col w-full pb-12">
+  <div class="w-full flex flex-col md:flex-row md:items-center justify-between gap-4 py-4">
+    <div class="flex items-center gap-4 flex-wrap">
+      <div class="relative flex items-center">
+        <span class="material-symbols-outlined absolute left-3.5 text-[18px] text-outline pointer-events-none">search</span>
+        <input id="search" type="text" placeholder="Search call center records..." class="h-10 pl-10 pr-4 w-72 sm:w-80 rounded-lg bg-surface-container-lowest text-on-surface font-body-md text-body-md shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-tertiary-fixed-variant placeholder:text-outline/70">
+      </div>
+      <span id="count" class="font-body-sm text-body-sm text-on-surface-variant font-medium">Loading…</span>
+    </div>
+    <div class="flex items-center gap-2.5 self-end md:self-auto">
+      <button id="export" type="button" class="h-9 px-3.5 rounded-lg bg-surface-container-lowest shadow-sm hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors">
+        <span class="material-symbols-outlined text-[17px]">download</span><span>Export CSV</span>
+      </button>
+      <button id="reset" type="button" title="Reset search and sorting" class="h-9 px-3 rounded-lg bg-surface-container-lowest shadow-sm hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex items-center gap-1 transition-colors">
+        <span class="material-symbols-outlined text-[17px]">refresh</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="w-full bg-surface-container-lowest rounded-xl shadow-md overflow-hidden flex flex-col">
+    <div class="table-scroll w-full overflow-x-auto max-h-[calc(100vh-220px)] overflow-y-auto">
+      <table class="w-full text-left border-collapse" id="crmTable">
+        <thead class="sticky top-0 z-20 bg-primary-container text-on-primary">
+          <tr id="thead" class="font-label-sm text-label-sm uppercase tracking-wider select-none"></tr>
+          <tr class="h-[2px] bg-tertiary-fixed-variant"><td id="accent" class="p-0 h-[2px]"></td></tr>
+        </thead>
+        <tbody id="tbody" class="font-body-md text-body-md text-on-surface"></tbody>
+      </table>
+    </div>
+    <div class="w-full px-5 py-3.5 bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-3 text-on-surface-variant font-body-sm text-body-sm">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-surface-tint"></span>
+        <span id="showing"></span>
+      </div>
+      <div id="pager" class="flex items-center gap-1.5 font-label-sm text-label-sm"></div>
+    </div>
+  </div>
 </div>
-<div class="bar">
-  <input type="search" id="search" placeholder="Search…">
-  <span id="count">Loading…</span>
-</div>
-<div class="wrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+</main>
 
 <script>
+const clean = s => (s ?? '').toString().trim();
+let HEADERS = [];
+
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-let HEAD = [], ROWS = [];
+const fmt = n => n.toLocaleString('en-IN');
+const PAGE = 50;
+let ROWS = [], VIEW = [], page = 0, sortCol = null, sortAsc = true;
 
-function render() {
-  const q = $('search').value.trim().toLowerCase();
-  const rows = q ? ROWS.filter(r => r.some(v => v.toLowerCase().includes(q))) : ROWS;
-  $('tbody').innerHTML = rows.map(r => '<tr>' + r.map(v => `<td>${esc(v)}</td>`).join('') + '</tr>').join('');
-  $('count').textContent = `${rows.length.toLocaleString('en-IN')} of ${ROWS.length.toLocaleString('en-IN')} rows`;
+// Pill colours for Lead Source, from the design
+const PILL = {
+  'Meta': 'bg-surface-container text-on-surface-variant',
+  'Business Affiliate Partner': 'bg-secondary-fixed text-on-secondary-fixed-variant',
+  'Organic': 'bg-primary-fixed text-on-primary-fixed-variant',
+  'Inbound Phone call': 'bg-secondary-container text-on-secondary-container',
+};
+function pillClass(v) {
+  if (PILL[v]) return PILL[v];
+  if (v.startsWith('Referral')) return 'bg-tertiary-fixed text-on-tertiary-fixed-variant';
+  return 'bg-surface-variant text-on-surface-variant';
 }
 
-$('search').addEventListener('input', render);
+const DASH = '<span class="text-outline">—</span>';
+function cell(v, c) {
+  const td = 'py-3 px-4';
+  if (c === 0) return `<td class="${td} text-center font-body-sm text-body-sm text-on-surface-variant font-medium">${esc(v)}</td>`;
+  if (!v) return `<td class="${td}">${DASH}</td>`;
+  if (c === 2) return `<td class="${td} font-medium text-on-surface whitespace-nowrap">${esc(v)}</td>`;
+  if (c === 4) return `<td class="${td} font-body-sm text-body-sm whitespace-nowrap tracking-wide font-mono text-on-surface">${esc(v)}</td>`;
+  if (c === 3) return `<td class="${td}"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm whitespace-nowrap ${pillClass(v)}">${esc(v)}</span></td>`;
+  return `<td class="${td} font-body-sm text-body-sm whitespace-nowrap text-on-surface">${esc(v)}</td>`;
+}
+
+function renderHead() {
+  $('thead').innerHTML = HEADERS.map((h, c) => {
+    const icon = sortCol === c ? (sortAsc ? 'arrow_upward' : 'arrow_downward') : 'unfold_more';
+    return `<th scope="col" class="py-3 px-4 font-semibold whitespace-nowrap ${c === 0 ? 'text-center' : ''}">
+      <button type="button" data-col="${c}" class="inline-flex items-center gap-1 uppercase tracking-wider hover:text-secondary-fixed">
+        <span>${esc(h)}</span><span class="material-symbols-outlined text-[14px]">${icon}</span>
+      </button></th>`;
+  }).join('');
+  $('accent').colSpan = HEADERS.length;
+}
+
+function apply() {
+  const q = clean($('search').value).toLowerCase();
+  VIEW = q ? ROWS.filter(r => r.some(v => v.toLowerCase().includes(q))) : ROWS.slice();
+  if (sortCol !== null) {
+    const num = sortCol === 0;
+    VIEW.sort((a, b) => {
+      const x = a[sortCol], y = b[sortCol];
+      const d = num ? x - y : x.localeCompare(y, undefined, { numeric: true, sensitivity: 'base' });
+      return sortAsc ? d : -d;
+    });
+  }
+  page = 0;
+  render();
+}
+
+function render() {
+  const pages = Math.max(1, Math.ceil(VIEW.length / PAGE));
+  page = Math.min(page, pages - 1);
+  const start = page * PAGE, slice = VIEW.slice(start, start + PAGE);
+  $('tbody').innerHTML = slice.map((r, i) =>
+    `<tr class="${i % 2 ? 'bg-surface-container-low' : 'bg-surface-container-lowest'} hover:bg-tertiary-fixed/30 transition-colors duration-150">` +
+    r.map(cell).join('') + '</tr>').join('');
+  $('count').textContent = `${fmt(VIEW.length)} of ${fmt(ROWS.length)} rows`;
+  $('showing').textContent = VIEW.length
+    ? `Showing ${fmt(start + 1)} to ${fmt(start + slice.length)} of ${fmt(VIEW.length)} records`
+    : 'No records match your search';
+  renderPager(pages);
+}
+
+function renderPager(pages) {
+  const btn = 'px-2.5 py-1 rounded hover:bg-surface-container transition-colors';
+  const nums = [...new Set([0, 1, page - 1, page, page + 1, pages - 2, pages - 1])]
+    .filter(p => p >= 0 && p < pages).sort((a, b) => a - b);
+  let html = `<button type="button" data-page="${page - 1}" class="px-3 py-1 rounded bg-surface-container-lowest text-on-surface hover:bg-surface-container disabled:opacity-40 transition-colors" ${page === 0 ? 'disabled' : ''}>Previous</button>`;
+  nums.forEach((p, i) => {
+    if (i && p - nums[i - 1] > 1) html += '<span class="px-1 text-outline">...</span>';
+    html += p === page ? `<span class="px-2 py-1 font-semibold text-primary">${p + 1}</span>`
+      : `<button type="button" data-page="${p}" class="${btn}">${p + 1}</button>`;
+  });
+  html += `<button type="button" data-page="${page + 1}" class="px-3 py-1 rounded bg-surface-container-lowest text-on-surface hover:bg-surface-container disabled:opacity-40 transition-colors" ${page >= pages - 1 ? 'disabled' : ''}>Next</button>`;
+  $('pager').innerHTML = html;
+}
+
+function exportCsv() {
+  const csv = Papa.unparse({ fields: HEADERS, data: VIEW });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv' }));
+  a.download = 'MagickHome_Call_Center_Data.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+$('search').addEventListener('input', apply);
+$('thead').addEventListener('click', e => {
+  const b = e.target.closest('button[data-col]'); if (!b) return;
+  const c = Number(b.dataset.col);
+  if (sortCol === c) sortAsc = !sortAsc; else { sortCol = c; sortAsc = true; }
+  renderHead(); apply();
+});
+$('pager').addEventListener('click', e => {
+  const b = e.target.closest('button[data-page]'); if (!b || b.disabled) return;
+  page = Number(b.dataset.page); render();
+  document.querySelector('.table-scroll').scrollTop = 0;
+});
+$('export').addEventListener('click', exportCsv);
+$('reset').addEventListener('click', () => { $('search').value = ''; sortCol = null; sortAsc = true; renderHead(); apply(); });
 
 fetch('data/call-center.csv', { cache: 'no-store' })
   .then(r => r.ok ? r.text() : Promise.reject())
   .then(text => {
-    [HEAD, ...ROWS] = Papa.parse(text, { skipEmptyLines: true }).data;
-    $('thead').innerHTML = '<tr>' + HEAD.map(h => `<th>${esc(h)}</th>`).join('') + '</tr>';
-    render();
+    [HEADERS, ...ROWS] = Papa.parse(text, { skipEmptyLines: true }).data.map(r => r.map(clean));
+    renderHead(); apply();
   })
   .catch(() => { $('count').textContent = 'Could not load data/call-center.csv'; });
 </script>
