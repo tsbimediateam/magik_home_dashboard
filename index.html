@@ -1,28 +1,50 @@
-<!doctype html>
-<html lang="en">
-<head>
+<!DOCTYPE html><html lang="en"><head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Magik Home</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Magick Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+          },
+          colors: {
+            brand: {
+              orange: "#E87524",
+              forest: "#273D36",
+              border: "#E7DFD3",
+              bg: "#F7F4EF",
+            }
+          }
+        },
+      },
+    };
+  </script>
 <style>
-body { margin: 0; padding: 16px; font: 14px/1.4 Arial, sans-serif; background: #fff; color: #000; }
-.nav { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
-.nav h1 { font-size: 18px; margin: 0 0 0 8px; }
-.nav button, .nav .btn { font: inherit; font-size: 13px; padding: 5px 12px; border: 1px solid #bbb; border-radius: 4px; background: #f5f5f5; color: #000; text-decoration: none; cursor: pointer; }
-.nav button:hover, .nav .btn:hover { background: #e8e8e8; }
-h1 { font-size: 22px; margin: 8px 0 20px; }
-.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; max-width: 960px; }
-.tile { display: block; padding: 28px 20px; border: 1px solid #bbb; border-radius: 6px; background: #f5f5f5; color: #000; text-decoration: none; font-size: 16px; font-weight: bold; text-align: center; }
-.tile:hover { background: #e8e8e8; }
-</style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #F7F4EF;
+    }
+  </style>
 </head>
-<body>
-<h1>Magik Home</h1>
-<div class="tiles">
-  <a class="tile" href="crm.html">CRM Data</a>
-  <a class="tile" href="call-center.html">Call Center Data</a>
-  <a class="tile" href="leads-dashboard.html">Leads Dashboard</a>
-  <a class="tile" href="campaign-dashboard.html">Campaign Dashboard</a>
+<body class="bg-[#F7F4EF] text-[#273D36] min-h-screen flex flex-col antialiased selection:bg-[#E87524]/20 selection:text-[#273D36]">
+<!-- Brand Header -->
+<header class="w-full bg-[#FFFFFF]/90 backdrop-blur-sm border-b-2 border-[#E87524] z-50 sticky top-0 transition-colors">
+<div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 h-20 md:h-24 flex items-center justify-between">
+<a class="inline-flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E87524] rounded-lg p-1 transition-transform hover:opacity-95" href="index.html">
+<img alt="Magick Home" class="h-10 md:h-12 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgUpVBkPc5hO72GugSV9ONDQnR5q90MfIcpMuxHgYqdBfgyxg7rObshjt_3hYVRqQyBI8QRcFotvcT_f12xUX-VAIHVFfN0vWOkHF1x8MQMRD4q7_GFqD2F770EXYB6GZ1_tOj_RgtC8qokVPXCIrtBXI61w1yxEGvReVWHTm_4-BkZSOd9l-A4T_cK1HXpA6BNyVWm49T4F1lr_0BdVTMq31Oj6qguNKJNz_ILc0tu5hWYFzUgZBNS3LqLSr0bSS0Hh0">
+</a>
 </div>
-</body>
-</html>
+</header>
+<!-- Centered Navigation Area -->
+<main class="flex-1 w-full flex items-center justify-center px-6 sm:px-8 lg:px-12 py-12 md:py-16 min-h-[calc(100vh-85px)]">
+<div class="w-full max-w-7xl mx-auto"><div class="max-w-4xl mx-auto w-full"><div class="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-10"><!-- Card 1: CRM Data --><a href="crm.html" class="group relative bg-[#FFFFFF] rounded-2xl border border-[#E7DFD3] p-10 md:p-12 flex flex-col justify-between shadow-sm hover:shadow-xl hover:border-[#E87524]/50 hover:bg-[#FBE8D8]/15 transition-all duration-300 ease-out hover:-translate-y-2 cursor-pointer min-h-[300px]"><div class="flex items-start justify-between w-full"><div class="w-12 h-1 bg-[#E87524] rounded-full transition-all duration-300 group-hover:w-16"></div><div class="w-10 h-10 rounded-full flex items-center justify-center text-[#E87524] bg-[#FBE8D8]/30 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:-translate-y-1.5"><span class="material-symbols-outlined text-[28px]">north_east</span></div></div><div class="my-auto py-3"><div class="w-20 h-20 rounded-2xl bg-[#F7F4EF] flex items-center justify-center text-[#273D36] group-hover:text-[#E87524] group-hover:bg-[#FBE8D8]/50 transition-all duration-300 shadow-sm"><svg class="w-12 h-12 stroke-current transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div></div><div><h2 class="text-2xl md:text-[26px] font-semibold text-[#273D36] tracking-tight group-hover:text-[#112721] transition-colors leading-tight">CRM Data</h2></div></a><!-- Card 2: Call Center Data --><a href="call-center.html" class="group relative bg-[#FFFFFF] rounded-2xl border border-[#E7DFD3] p-10 md:p-12 flex flex-col justify-between shadow-sm hover:shadow-xl hover:border-[#E87524]/50 hover:bg-[#FBE8D8]/15 transition-all duration-300 ease-out hover:-translate-y-2 cursor-pointer min-h-[300px]"><div class="flex items-start justify-between w-full"><div class="w-12 h-1 bg-[#E87524] rounded-full transition-all duration-300 group-hover:w-16"></div><div class="w-10 h-10 rounded-full flex items-center justify-center text-[#E87524] bg-[#FBE8D8]/30 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:-translate-y-1.5"><span class="material-symbols-outlined text-[28px]">north_east</span></div></div><div class="my-auto py-3"><div class="w-20 h-20 rounded-2xl bg-[#F7F4EF] flex items-center justify-center text-[#273D36] group-hover:text-[#E87524] group-hover:bg-[#FBE8D8]/50 transition-all duration-300 shadow-sm"><svg class="w-12 h-12 stroke-current transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path><path d="M19 16v-4a7 7 0 0 0-14 0v4"></path></svg></div></div><div><h2 class="text-2xl md:text-[26px] font-semibold text-[#273D36] tracking-tight group-hover:text-[#112721] transition-colors leading-tight">Call Center Data</h2></div></a><!-- Card 3: Leads Dashboard --><a href="leads-dashboard.html" class="group relative bg-[#FFFFFF] rounded-2xl border border-[#E7DFD3] p-10 md:p-12 flex flex-col justify-between shadow-sm hover:shadow-xl hover:border-[#E87524]/50 hover:bg-[#FBE8D8]/15 transition-all duration-300 ease-out hover:-translate-y-2 cursor-pointer min-h-[300px]"><div class="flex items-start justify-between w-full"><div class="w-12 h-1 bg-[#E87524] rounded-full transition-all duration-300 group-hover:w-16"></div><div class="w-10 h-10 rounded-full flex items-center justify-center text-[#E87524] bg-[#FBE8D8]/30 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:-translate-y-1.5"><span class="material-symbols-outlined text-[28px]">north_east</span></div></div><div class="my-auto py-3"><div class="w-20 h-20 rounded-2xl bg-[#F7F4EF] flex items-center justify-center text-[#273D36] group-hover:text-[#E87524] group-hover:bg-[#FBE8D8]/50 transition-all duration-300 shadow-sm"><svg class="w-12 h-12 stroke-current transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M12 3v4M12 17v4M3 12h4M17 12h4"></path></svg></div></div><div><h2 class="text-2xl md:text-[26px] font-semibold text-[#273D36] tracking-tight group-hover:text-[#112721] transition-colors leading-tight">Leads Dashboard</h2></div></a><!-- Card 4: Campaign Dashboard --><a href="campaign-dashboard.html" class="group relative bg-[#FFFFFF] rounded-2xl border border-[#E7DFD3] p-10 md:p-12 flex flex-col justify-between shadow-sm hover:shadow-xl hover:border-[#E87524]/50 hover:bg-[#FBE8D8]/15 transition-all duration-300 ease-out hover:-translate-y-2 cursor-pointer min-h-[300px]"><div class="flex items-start justify-between w-full"><div class="w-12 h-1 bg-[#E87524] rounded-full transition-all duration-300 group-hover:w-16"></div><div class="w-10 h-10 rounded-full flex items-center justify-center text-[#E87524] bg-[#FBE8D8]/30 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:-translate-y-1.5"><span class="material-symbols-outlined text-[28px]">north_east</span></div></div><div class="my-auto py-3"><div class="w-20 h-20 rounded-2xl bg-[#F7F4EF] flex items-center justify-center text-[#273D36] group-hover:text-[#E87524] group-hover:bg-[#FBE8D8]/50 transition-all duration-300 shadow-sm"><svg class="w-12 h-12 stroke-current transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 13v-2z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path><path d="M21 9v6"></path></svg></div></div><div><h2 class="text-2xl md:text-[26px] font-semibold text-[#273D36] tracking-tight group-hover:text-[#112721] transition-colors leading-tight">Campaign Dashboard</h2></div></a></div></div></div>
+</main>
+
+
+</body></html>
