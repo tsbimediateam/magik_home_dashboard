@@ -3,13 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Campaign Dashboard – Magik Home</title>
+<title>Campaign Dashboard – Magick Home</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
-body { margin: 0; padding: 16px; font: 14px/1.4 Arial, sans-serif; background: #fff; color: #000; }
+body { margin: 0; padding: 16px; font: 13px/1.4 Arial, sans-serif; background: #fff; color: #000; }
 .nav { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
 .nav h1 { font-size: 18px; margin: 0 0 0 8px; }
-.nav button, .nav .btn { font: inherit; font-size: 13px; padding: 5px 12px; border: 1px solid #bbb; border-radius: 4px; background: #f5f5f5; color: #000; text-decoration: none; cursor: pointer; }
+.nav button, .nav .btn { font: inherit; padding: 5px 12px; border: 1px solid #bbb; border-radius: 4px; background: #f5f5f5; color: #000; text-decoration: none; cursor: pointer; }
 .nav button:hover, .nav .btn:hover { background: #e8e8e8; }
+.filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 12px; }
+.filters label { display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: #444; }
+.filters input, .filters button { font: inherit; font-size: 13px; padding: 5px 8px; border: 1px solid #bbb; border-radius: 4px; background: #fff; color: #000; }
+.filters button { background: #f5f5f5; cursor: pointer; }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.tab { font: inherit; padding: 8px 18px; border: 1px solid #bbb; border-radius: 4px; background: #f5f5f5; color: #000; cursor: pointer; }
+.tab:hover { background: #e8e8e8; }
+.tab[aria-selected="true"] { background: #000; border-color: #000; color: #fff; }
+h2 { font-size: 15px; margin: 18px 0 6px; }
+.wrap { overflow-x: auto; margin-bottom: 8px; }
+table { border-collapse: collapse; font-size: 12px; font-variant-numeric: tabular-nums; }
+th, td { border: 1px solid #ccc; padding: 4px 10px; white-space: nowrap; text-align: right; }
+th { background: #eee; font-weight: bold; }
+th:first-child, td:first-child { text-align: left; }
+tr.group td, tr.total td { font-weight: bold; }
+tr.total td { background: #eee; }
+tr.sub td:first-child { padding-left: 24px; }
+.note { color: #555; font-size: 12px; margin: 4px 0 0; }
 </style>
 </head>
 <body>
@@ -18,6 +37,279 @@ body { margin: 0; padding: 16px; font: 14px/1.4 Arial, sans-serif; background: #
   <a class="btn" href="index.html">Home</a>
   <h1>Campaign Dashboard</h1>
 </div>
-<p>Coming soon.</p>
+
+<div class="filters">
+  <label>From <input type="date" id="dFrom"></label>
+  <label>To <input type="date" id="dTo"></label>
+  <button type="button" id="reset">Reset dates</button>
+  <span id="status" class="note">Loading…</span>
+</div>
+
+<div class="tabs" role="tablist">
+  <button type="button" class="tab" role="tab" data-view="location" aria-selected="true">Location</button>
+  <button type="button" class="tab" role="tab" data-view="platform" aria-selected="false">Platform</button>
+  <button type="button" class="tab" role="tab" data-view="campaign" aria-selected="false">Campaign</button>
+  <button type="button" class="tab" role="tab" data-view="ads" aria-selected="false">Ads</button>
+</div>
+
+<div id="view"></div>
+
+<script>
+const clean = s => (s ?? '').toString().trim();
+
+// Remove the country code; numbers shorter than 10 digits are kept as they are
+function cleanPhone(v) {
+  let s = clean(v);
+  if (!s || /^\d{10}$/.test(s)) return s;
+  let d = s.includes(' ') ? s.slice(s.indexOf(' ') + 1).replace(/\D/g, '') : s.replace(/\D/g, '');
+  while (d.length > 10) {
+    const c = ['971', '91', '1'].find(c => d.startsWith(c) && d.length - c.length >= 9);
+    if (!c) break;
+    d = d.slice(c.length);
+  }
+  return d;
+}
+
+function phonesIn(text) {
+  return (text.match(/\d{10,}/g) || []).map(d => d.slice(-10));
+}
+
+// Same QL / MS / MD rules as the Leads Dashboard
+const MS_STATUSES = new Set([
+  'Meeting Done', 'Meeting Scheduled', 'Meeting Postponed', 'Meeting Done - Sep MS', 'Meeting Done - Aug MS',
+  'Meeting Done - Jul MS', 'Meeting Incomplete', 'Meeting Done on Sep',
+]);
+const MD_STATUSES = new Set([
+  'Meeting Done', 'Meeting Done - Sep MS', 'Meeting Done - Aug MS', 'Meeting Done - Jul MS', 'Meeting Done on Sep',
+]);
+
+const META_SOURCES = new Set(['meta', 'fb lead ads', 'online paid - meta']);
+const CITIES = ['Bangalore', 'Chennai', 'Coimbatore'];
+// Spend from campaigns without a city code is split across the cities
+const ALL_CITIES_SPLIT = { Bangalore: 0.4, Chennai: 0.4, Coimbatore: 0.2 };
+// Campaigns that bring no leads; their spend is left out of every view
+const NON_LEAD_CAMPAIGN = /sofa|rambha|ramba-video|page like|brand film/i;
+
+// Campaign and ad names are matched ignoring capitals, spaces, hyphens, underscores and "+" (a space in tracking links)
+const key = s => clean(s).toLowerCase().replace(/[\s\-_+]+/g, '');
+
+function platformOf(source) {
+  const s = clean(source).toLowerCase();
+  if (META_SOURCES.has(s)) return 'Meta';
+  if (s === 'google') return 'Google';
+  return null;
+}
+
+function cityFromText(text) {
+  const t = clean(text).toLowerCase();
+  if (/bangalore|bengaluru/.test(t)) return 'Bangalore';
+  if (/chennai|சென்னை/.test(t)) return 'Chennai';
+  if (/coimbatore/.test(t)) return 'Coimbatore';
+  return null;
+}
+
+// City code in a campaign or ad set name (BEN/BLR, CHE/Chennai, CBE)
+function cityFromName(name) {
+  const t = '_' + clean(name).toLowerCase().replace(/[\s\-]+/g, '_') + '_';
+  if (/_(ben|blr|bangalore|bengaluru)_/.test(t)) return 'Bangalore';
+  if (/_(che|chennai)_/.test(t)) return 'Chennai';
+  if (/_(cbe|coimbatore)_/.test(t)) return 'Coimbatore';
+  return null;
+}
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const inr = n => '₹' + Math.round(n).toLocaleString('en-IN');
+const pct = (a, b) => (b ? Math.round(100 * a / b) : 0) + '%';
+const per = (spend, n) => inr(n ? spend / n : 0);
+
+let LEADS = [], SPEND = [], view = 'location';
+
+function loadLeads(text, callCenter) {
+  const cc = Papa.parse(callCenter, { header: true, skipEmptyLines: true }).data;
+  const phones = rows => new Set(rows.flatMap(r => phonesIn(clean(r['Phone number']))));
+  const QL = phones(cc);
+  const MS = phones(cc.filter(r => MS_STATUSES.has(clean(r['Meeting Status']))));
+  const MD = phones(cc.filter(r => MD_STATUSES.has(clean(r['Meeting Status']))));
+  const rows = Papa.parse(text, { header: true, skipEmptyLines: true, transformHeader: h => h.replace(/^﻿/, '').trim() }).data;
+  LEADS = rows.map(r => {
+    const platform = platformOf(r['Contact Source']);
+    if (!platform) return null;
+    const ph = phonesIn(cleanPhone(r['Phone Number']));
+    const has = set => ph.some(p => set.has(p));
+    const stage = clean(r['Contact Stage']);
+    const leadForm = clean(r['Contact Source']).toLowerCase() === 'fb lead ads';
+    return {
+      date: clean(r['Created On Date']) || clean(r['Created On']).slice(0, 10),
+      platform,
+      city: cityFromText(r['Store Location']) || cityFromText(r['Property City']),
+      campaign: clean(leadForm ? r['Campaign'] : r['Source Campaign']),
+      ad: clean(leadForm ? r['Ad Name'] : r['Source Content']),
+      ql: has(QL) || stage === 'Quotation Sent',
+      ms: has(MS),
+      md: has(MD),
+      natc: stage === 'Not able to Connect',
+    };
+  }).filter(Boolean);
+}
+
+function loadSpend(text) {
+  SPEND = Papa.parse(text, { header: true, skipEmptyLines: true }).data
+    .filter(r => !NON_LEAD_CAMPAIGN.test(r['Campaign']))
+    .map(r => ({
+      date: r['Date'], platform: r['Platform'], campaign: clean(r['Campaign']),
+      adset: clean(r['Ad Set']), ad: clean(r['Ad']), spend: Number(r['Spend']) || 0,
+      city: cityFromName(r['Ad Set']) || cityFromName(r['Campaign']),
+    }));
+  // Some leads carry the ad set name as their campaign; point those to the ad set's campaign
+  const campaigns = new Set(SPEND.map(s => key(s.campaign)));
+  const adsetCampaign = new Map(SPEND.filter(s => s.adset).map(s => [key(s.adset), s.campaign]));
+  LEADS.forEach(l => {
+    const k = key(l.campaign);
+    if (k && !campaigns.has(k) && adsetCampaign.has(k)) l.campaign = adsetCampaign.get(k);
+  });
+}
+
+function inRange(d) {
+  const from = $('dFrom').value, to = $('dTo').value;
+  return (!from || d >= from) && (!to || d <= to);
+}
+
+// Totals for a group of leads plus its spend
+function stats(leads, spend) {
+  return {
+    lsq: leads.length,
+    ql: leads.filter(l => l.ql).length,
+    ms: leads.filter(l => l.ms).length,
+    md: leads.filter(l => l.md).length,
+    natc: leads.filter(l => l.natc).length,
+    spend,
+  };
+}
+
+function cells(s, natc) {
+  const c = [s.lsq, s.ql, s.ms, s.md, inr(s.spend), per(s.spend, s.lsq), per(s.spend, s.ql), per(s.spend, s.ms),
+    per(s.spend, s.md), pct(s.ql, s.lsq), pct(s.ms, s.ql), pct(s.md, s.ms)];
+  if (natc) c.push(s.natc, pct(s.natc, s.lsq));
+  return c.map(v => `<td>${typeof v === 'number' ? v.toLocaleString('en-IN') : v}</td>`).join('');
+}
+
+function table(firstHeader, rows, natc, natcLabel = 'NATC %') {
+  const heads = [firstHeader, 'LSQ Leads', 'QL', 'MS', 'MD', 'Amount Spent', 'CPL', 'CPQL', 'CPMS', 'CPMD', 'QL%', 'MS%', 'MD%']
+    .concat(natc ? ['NATC', natcLabel] : []);
+  return `<div class="wrap"><table><thead><tr>${heads.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>` +
+    rows.map(r => `<tr class="${r.cls || ''}"><td>${esc(r.label)}</td>${cells(r.s, natc)}</tr>`).join('') +
+    '</tbody></table></div>';
+}
+
+const sum = (list, f) => list.reduce((a, x) => a + f(x), 0);
+const add = (a, b) => ({ lsq: a.lsq + b.lsq, ql: a.ql + b.ql, ms: a.ms + b.ms, md: a.md + b.md, natc: a.natc + b.natc, spend: a.spend + b.spend });
+const ZERO = { lsq: 0, ql: 0, ms: 0, md: 0, natc: 0, spend: 0 };
+
+function locationView(leads, spend) {
+  // Spend per city and platform; campaigns without a city code are split 40 / 40 / 20
+  const citySpend = {};
+  spend.forEach(s => {
+    const shares = s.city ? { [s.city]: 1 } : ALL_CITIES_SPLIT;
+    for (const [city, share] of Object.entries(shares)) {
+      const k = city + '|' + s.platform;
+      citySpend[k] = (citySpend[k] || 0) + s.spend * share;
+    }
+  });
+  const rows = [];
+  let total = ZERO;
+  CITIES.forEach(city => {
+    const subs = ['Google', 'Meta'].map(p => ({
+      label: p, cls: 'sub',
+      s: stats(leads.filter(l => l.city === city && l.platform === p), citySpend[city + '|' + p] || 0),
+    }));
+    const cityTotal = subs.reduce((a, r) => add(a, r.s), ZERO);
+    total = add(total, cityTotal);
+    rows.push({ label: city, cls: 'group', s: cityTotal }, ...subs);
+  });
+  rows.push({ label: 'Grand Total', cls: 'total', s: total });
+  const noCity = leads.filter(l => !l.city).length;
+  return table('Location', rows, true) +
+    (noCity ? `<p class="note">${noCity} lead${noCity > 1 ? 's have' : ' has'} no Store Location or Property City and ${noCity > 1 ? 'are' : 'is'} not shown.</p>` : '');
+}
+
+function platformView(leads, spend) {
+  const rows = ['Google', 'Meta'].map(p => ({
+    label: p, s: stats(leads.filter(l => l.platform === p), sum(spend.filter(s => s.platform === p), s => s.spend)),
+  }));
+  rows.push({ label: 'Grand Total', cls: 'total', s: rows.reduce((a, r) => add(a, r.s), ZERO) });
+  return table('Platform', rows, false);
+}
+
+// Rows for every name that has spend or leads; the Porter name is shown when both exist
+function groupRows(leads, spend, leadName, spendName) {
+  const groups = new Map();
+  const get = name => {
+    const k = key(name);
+    if (!groups.has(k)) groups.set(k, { label: name, leads: [], spend: 0 });
+    return groups.get(k);
+  };
+  spend.forEach(s => { if (spendName(s)) { const g = get(spendName(s)); g.label = spendName(s); g.spend += s.spend; } });
+  leads.forEach(l => { if (leadName(l)) get(leadName(l)).leads.push(l); });
+  return [...groups.values()].map(g => ({ label: g.label, s: stats(g.leads, g.spend) }));
+}
+
+function withTotal(rows) {
+  return rows.concat({ label: 'Grand Total', cls: 'total', s: rows.reduce((a, r) => add(a, r.s), ZERO) });
+}
+
+function campaignView(leads, spend) {
+  const byName = (a, b) => a.label.localeCompare(b.label);
+  return ['Meta', 'Google'].map(p => {
+    const rows = groupRows(leads.filter(l => l.platform === p), spend.filter(s => s.platform === p), l => l.campaign, s => s.campaign)
+      .sort(byName);
+    const unmatched = leads.filter(l => l.platform === p && !l.campaign).length;
+    return `<h2>${p}</h2>` + table(p, withTotal(rows), p === 'Meta') +
+      (unmatched ? `<p class="note">${unmatched} ${p} lead${unmatched > 1 ? 's have' : ' has'} no campaign name and ${unmatched > 1 ? 'are' : 'is'} not shown here.</p>` : '');
+  }).join('');
+}
+
+function adsView(leads, spend) {
+  const rows = groupRows(leads.filter(l => l.platform === 'Meta'), spend.filter(s => s.platform === 'Meta'), l => l.ad, s => s.ad)
+    .sort((a, b) => b.s.md - a.s.md || b.s.ms - a.s.ms || b.s.lsq - a.s.lsq);
+  const unmatched = leads.filter(l => l.platform === 'Meta' && !l.ad).length;
+  return table('Ads', withTotal(rows), true, 'L to NATC') +
+    (unmatched ? `<p class="note">${unmatched} Meta lead${unmatched > 1 ? 's have' : ' has'} no ad name and ${unmatched > 1 ? 'are' : 'is'} not shown here.</p>` : '');
+}
+
+function render() {
+  const leads = LEADS.filter(l => inRange(l.date));
+  const spend = SPEND.filter(s => inRange(s.date));
+  const views = { location: locationView, platform: platformView, campaign: campaignView, ads: adsView };
+  $('view').innerHTML = views[view](leads, spend);
+}
+
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  view = t.dataset.view;
+  document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-selected', String(b === t)));
+  render();
+}));
+$('dFrom').addEventListener('change', render);
+$('dTo').addEventListener('change', render);
+
+let DATES = [];
+$('reset').addEventListener('click', () => { $('dFrom').value = DATES[0]; $('dTo').value = DATES[DATES.length - 1]; render(); });
+
+const getText = url => fetch(url, { cache: 'no-store' }).then(r => r.ok ? r.text() : Promise.reject(url));
+
+Promise.all([getText('data/leads.csv'), getText('data/call-center.csv'), getText('data/ad-spend.csv')])
+  .then(([leads, callCenter, spend]) => {
+    loadLeads(leads, callCenter);
+    loadSpend(spend);
+    DATES = LEADS.map(l => l.date).concat(SPEND.map(s => s.date)).filter(Boolean).sort();
+    $('dFrom').min = $('dTo').min = DATES[0];
+    $('dFrom').max = $('dTo').max = DATES[DATES.length - 1];
+    $('dFrom').value = DATES[0];
+    $('dTo').value = DATES[DATES.length - 1];
+    $('status').textContent = `Data from ${DATES[0]} to ${DATES[DATES.length - 1]}`;
+    render();
+  })
+  .catch(url => { $('status').textContent = `Could not load ${url}`; });
+</script>
 </body>
 </html>
