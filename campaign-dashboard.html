@@ -6,6 +6,7 @@
 <title>Campaign Dashboard – Magick Home</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script>
   tailwind.config = {
@@ -31,6 +32,9 @@ body { background-color: #F7F4EF; color: #273D36; font-family: Inter, system-ui,
 .table-container::-webkit-scrollbar-thumb { background: #D9E2DC; border-radius: 4px; }
 .table-container::-webkit-scrollbar-thumb:hover { background: #E87524; }
 .tab[aria-selected="true"] { background: #273D36; color: #fff; border-color: #273D36; border-bottom: 2px solid #E87524; }
+.filter-btn { display: inline-flex; padding: 2px; border-radius: 3px; }
+.filter-btn:hover { background: rgba(255,255,255,.15); }
+#filterPop[hidden] { display: none; }
 </style>
 </head>
 <body class="min-h-screen flex flex-col font-sans antialiased text-brand-forest">
@@ -80,6 +84,7 @@ body { background-color: #F7F4EF; color: #273D36; font-family: Inter, system-ui,
 
   <div id="view"></div>
 </main>
+<div id="filterPop" hidden class="absolute z-50 w-64 bg-white border border-brand-beige rounded-lg shadow-lg p-2 normal-case tracking-normal font-normal"></div>
 
 <script>
 const clean = s => (s ?? '').toString().trim();
@@ -214,42 +219,97 @@ function stats(leads, spend) {
   };
 }
 
+const HEADS = ['LSQ Leads', 'QL', 'MS', 'MD', 'Amount Spent', 'CPL', 'CPQL', 'CPMS', 'CPMD', 'QL%', 'MS%', 'MD%'];
+const ratio = (a, b) => (b ? a / b : 0);
+
+// Each metric as [number, kind]; kind decides how it is shown and how Excel formats it
+function metrics(s, natc) {
+  const m = [[s.lsq, 'n'], [s.ql, 'n'], [s.ms, 'n'], [s.md, 'n'],
+    [s.spend, 'inr'], [ratio(s.spend, s.lsq), 'inr'], [ratio(s.spend, s.ql), 'inr'], [ratio(s.spend, s.ms), 'inr'], [ratio(s.spend, s.md), 'inr'],
+    [ratio(s.ql, s.lsq), 'pct'], [ratio(s.ms, s.ql), 'pct'], [ratio(s.md, s.ms), 'pct']];
+  if (natc) m.push([s.natc, 'n'], [ratio(s.natc, s.lsq), 'pct']);
+  return m;
+}
+const show = ([v, kind]) => kind === 'inr' ? inr(v) : kind === 'pct' ? Math.round(100 * v) + '%' : v.toLocaleString('en-IN');
+const texts = (label, s, natc) => [label, ...metrics(s, natc).map(show)];
+
+// Column filters per table: FILTERS[tableId][column] = Set of the values left ticked
+const FILTERS = {};
+// What each table currently shows, for the Excel export
+const SHOWN = {};
+
+const passes = (t, f, skipFirst) => Object.entries(f).every(([c, set]) => (skipFirst && c === '0') || set.has(t[c]));
+
+// Applies the filters; returns the visible rows (city tables keep their platform rows under each city) and the total
+function applyFilters(spec) {
+  const f = FILTERS[spec.id] || (FILTERS[spec.id] = {});
+  if (spec.groups) {
+    const groups = spec.groups.map(g => {
+      if (f[0] && !f[0].has(g.label)) return null;
+      const subs = g.subs.filter(r => (!f[0] || f[0].has(r.label)) && passes(texts(r.label, r.s, spec.natc), f, true));
+      return subs.length ? { label: g.label, s: subs.reduce((a, r) => add(a, r.s), ZERO), subs } : null;
+    }).filter(Boolean);
+    return { groups, total: groups.reduce((a, g) => add(a, g.s), ZERO) };
+  }
+  const rows = spec.rows.filter(r => passes(texts(r.label, r.s, spec.natc), f));
+  return { rows, total: rows.reduce((a, r) => add(a, r.s), ZERO) };
+}
+
+// The values offered in a column's filter list
+function options(spec, col) {
+  if (spec.groups && col === 0) return spec.groups.map(g => g.label).concat(['Google', 'Meta']);
+  const rows = spec.groups ? spec.groups.flatMap(g => g.subs) : spec.rows;
+  const list = rows.map(r => ({ t: texts(r.label, r.s, spec.natc)[col], v: col ? metrics(r.s, spec.natc)[col - 1][0] : 0 }));
+  const seen = new Map();
+  list.forEach(o => { if (!seen.has(o.t)) seen.set(o.t, o.v); });
+  const keys = [...seen.keys()];
+  return col ? keys.sort((a, b) => seen.get(a) - seen.get(b)) : keys;
+}
+
 function cells(s, natc, total) {
-  const c = [s.lsq, s.ql, s.ms, s.md, inr(s.spend), per(s.spend, s.lsq), per(s.spend, s.ql), per(s.spend, s.ms),
-    per(s.spend, s.md), pct(s.ql, s.lsq), pct(s.ms, s.ql), pct(s.md, s.ms)];
-  if (natc) c.push(s.natc, pct(s.natc, s.lsq));
+  const c = metrics(s, natc).map(show);
   const line = total ? 'border-brand-forest/20' : 'border-brand-beige';
   return c.map((v, i) => {
     const pad = i === 4 ? 'px-4' : 'px-3';
     const weight = i === 4 && !total ? ' font-semibold' : '';
     const edge = i === c.length - 1 ? '' : ` border-r ${line}`;
-    return `<td class="py-2.5 ${pad} text-right${edge}${weight}">${typeof v === 'number' ? v.toLocaleString('en-IN') : v}</td>`;
+    return `<td class="py-2.5 ${pad} text-right${edge}${weight}">${v}</td>`;
   }).join('');
 }
 
-// Row styles from the design: city rows in sage, platform rows indented, Grand Total in the footer
-const ROW = {
-  group: { tr: 'bg-brand-sage font-bold', td: 'text-sm font-semibold' },
-  sub: { tr: 'bg-white', td: 'pl-8 font-medium text-gray-700' },
-  '': { tr: 'bg-white', td: 'font-semibold' },
-};
+const FILTER_ICON = '<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M3 4h14l-5.5 6.5V16l-3 1.5v-7L3 4z"/></svg>';
 
-function table(firstHeader, rows, natc, natcLabel = 'NATC %') {
-  const heads = [firstHeader, 'LSQ Leads', 'QL', 'MS', 'MD', 'Amount Spent', 'CPL', 'CPQL', 'CPMS', 'CPMD', 'QL%', 'MS%', 'MD%']
-    .concat(natc ? ['NATC', natcLabel] : []);
-  const th = heads.map((h, i) => `<th scope="col" class="py-3 ${i === 0 || i === 5 ? 'px-4' : 'px-3'} ${i === 0 ? 'text-left' : 'text-right'}${i === 5 ? ' font-bold' : ''}${i === heads.length - 1 ? '' : ' border-r border-white/10'}${i === 0 && firstHeader === 'Ads' ? ' min-w-[280px]' : ''}">${h}</th>`).join('');
-  const body = rows.filter(r => r.cls !== 'total');
-  const total = rows.find(r => r.cls === 'total');
-  let n = 0;
-  const tr = body.map(r => {
-    const st = ROW[r.cls || ''];
-    // Plain rows alternate white and ivory
-    const bg = r.cls ? st.tr : (n++ % 2 ? 'bg-brand-ivoryLight' : 'bg-white');
-    const trClass = r.cls === 'sub' ? (r.label === 'Meta' ? 'bg-brand-ivoryLight' : 'bg-white') : r.cls ? st.tr : bg;
-    return `<tr class="${trClass}"><td class="py-2.5 px-4 text-left border-r border-brand-beige ${st.td}">${esc(r.label)}</td>${cells(r.s, natc)}</tr>`;
+function table(spec) {
+  const heads = [spec.title, ...HEADS].concat(spec.natc ? ['NATC', spec.natcLabel || 'NATC %'] : []);
+  const f = FILTERS[spec.id] || {};
+  const th = heads.map((h, i) => {
+    const on = f[i] ? ' text-brand-orange' : ' text-white/70 hover:text-white';
+    return `<th scope="col" class="py-3 ${i === 0 || i === 5 ? 'px-4' : 'px-3'} ${i === 0 ? 'text-left' : 'text-right'}${i === 5 ? ' font-bold' : ''}${i === heads.length - 1 ? '' : ' border-r border-white/10'}${i === 0 && spec.title === 'Ads' ? ' min-w-[280px]' : ''}">
+      <span class="inline-flex items-center gap-1.5">${h}<button type="button" class="filter-btn${on}" data-table="${spec.id}" data-col="${i}" aria-label="Filter ${h}" title="Filter ${h}">${FILTER_ICON}</button></span></th>`;
   }).join('');
-  const foot = total ? `<tfoot class="bg-brand-beige font-extrabold text-brand-forest border-t-2 border-brand-orange text-xs"><tr><td class="py-3 px-4 text-left border-r border-brand-forest/20">Grand Total</td>${cells(total.s, natc, true)}</tr></tfoot>` : '';
-  return `<div class="bg-white border border-brand-beige rounded-xl shadow-sm overflow-hidden mb-3"><div class="table-container overflow-x-auto">
+  const shown = applyFilters(spec);
+  SHOWN[spec.id] = { spec, shown };
+  const td0 = 'py-2.5 px-4 text-left border-r border-brand-beige';
+  let tr;
+  if (shown.groups) {
+    tr = shown.groups.map(g =>
+      `<tr class="bg-brand-sage font-bold"><td class="${td0} text-sm font-semibold">${esc(g.label)}</td>${cells(g.s, spec.natc)}</tr>` +
+      g.subs.map(r => `<tr class="${r.label === 'Meta' ? 'bg-brand-ivoryLight' : 'bg-white'}"><td class="${td0} pl-8 font-medium text-gray-700">${esc(r.label)}</td>${cells(r.s, spec.natc)}</tr>`).join('')
+    ).join('');
+  } else {
+    tr = shown.rows.map((r, n) =>
+      `<tr class="${n % 2 ? 'bg-brand-ivoryLight' : 'bg-white'}"><td class="${td0} font-semibold">${esc(r.label)}</td>${cells(r.s, spec.natc)}</tr>`).join('');
+  }
+  const empty = !(shown.groups || shown.rows).length;
+  if (empty) tr = `<tr class="bg-white"><td colspan="${heads.length}" class="py-4 px-4 text-left text-gray-500 italic">No rows match the filters.</td></tr>`;
+  const foot = `<tfoot class="bg-brand-beige font-extrabold text-brand-forest border-t-2 border-brand-orange text-xs"><tr><td class="py-3 px-4 text-left border-r border-brand-forest/20">Grand Total</td>${cells(shown.total, spec.natc, true)}</tr></tfoot>`;
+  const active = Object.keys(f).length;
+  return `<div class="flex flex-wrap items-center justify-end gap-2 mb-2">
+      ${active ? `<button type="button" class="clear-filters px-3 py-1.5 text-xs font-medium rounded-lg text-brand-forest bg-white border border-brand-beige hover:border-brand-orange hover:bg-brand-peach hover:text-brand-orange transition-colors" data-table="${spec.id}">Clear filters (${active})</button>` : ''}
+      <button type="button" class="export px-3 py-1.5 text-xs font-semibold rounded-lg text-white bg-brand-forest hover:bg-brand-orange transition-colors inline-flex items-center gap-1.5" data-table="${spec.id}">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>Export to Excel</button>
+    </div>
+    <div class="bg-white border border-brand-beige rounded-xl shadow-sm overflow-hidden mb-3"><div class="table-container overflow-x-auto">
     <table class="dashboard-table w-full text-xs text-left border-collapse whitespace-nowrap">
     <thead class="bg-brand-forest text-white uppercase tracking-wider text-[11px] font-semibold border-b-2 border-brand-orange"><tr>${th}</tr></thead>
     <tbody class="divide-y divide-brand-beige text-brand-forest">${tr}</tbody>${foot}</table></div></div>`;
@@ -272,20 +332,14 @@ function locationView(leads, spend) {
       citySpend[k] = (citySpend[k] || 0) + s.spend * share;
     }
   });
-  const rows = [];
-  let total = ZERO;
-  CITIES.forEach(city => {
-    const subs = ['Google', 'Meta'].map(p => ({
-      label: p, cls: 'sub',
-      s: stats(leads.filter(l => l.city === city && l.platform === p), citySpend[city + '|' + p] || 0),
-    }));
-    const cityTotal = subs.reduce((a, r) => add(a, r.s), ZERO);
-    total = add(total, cityTotal);
-    rows.push({ label: city, cls: 'group', s: cityTotal }, ...subs);
-  });
-  rows.push({ label: 'Grand Total', cls: 'total', s: total });
+  const groups = CITIES.map(city => ({
+    label: city,
+    subs: ['Google', 'Meta'].map(p => ({
+      label: p, s: stats(leads.filter(l => l.city === city && l.platform === p), citySpend[city + '|' + p] || 0),
+    })),
+  }));
   const noCity = leads.filter(l => !l.city).length;
-  return table('Location', rows, true) +
+  return table({ id: 'location', title: 'Location', natc: true, groups }) +
     (noCity ? note(`${noCity} lead${noCity > 1 ? 's have' : ' has'} no Store Location or Property City and ${noCity > 1 ? 'are' : 'is'} not shown.`) : '');
 }
 
@@ -293,8 +347,7 @@ function platformView(leads, spend) {
   const rows = ['Google', 'Meta'].map(p => ({
     label: p, s: stats(leads.filter(l => l.platform === p), sum(spend.filter(s => s.platform === p), s => s.spend)),
   }));
-  rows.push({ label: 'Grand Total', cls: 'total', s: rows.reduce((a, r) => add(a, r.s), ZERO) });
-  return table('Platform', rows, false);
+  return table({ id: 'platform', title: 'Platform', natc: false, rows });
 }
 
 // Rows for every name that has spend or leads; the Porter name is shown when both exist
@@ -310,17 +363,14 @@ function groupRows(leads, spend, leadName, spendName) {
   return [...groups.values()].map(g => ({ label: g.label, s: stats(g.leads, g.spend) }));
 }
 
-function withTotal(rows) {
-  return rows.concat({ label: 'Grand Total', cls: 'total', s: rows.reduce((a, r) => add(a, r.s), ZERO) });
-}
-
 function campaignView(leads, spend) {
   const byName = (a, b) => a.label.localeCompare(b.label);
   return ['Meta', 'Google'].map(p => {
     const rows = groupRows(leads.filter(l => l.platform === p), spend.filter(s => s.platform === p), l => l.campaign, s => s.campaign)
       .sort(byName);
     const unmatched = leads.filter(l => l.platform === p && !l.campaign).length;
-    return heading(p, p === 'Meta' ? 'bg-brand-orange' : 'bg-brand-forest') + table(p, withTotal(rows), p === 'Meta') +
+    return heading(p, p === 'Meta' ? 'bg-brand-orange' : 'bg-brand-forest') +
+      table({ id: 'campaign-' + p.toLowerCase(), title: p, natc: p === 'Meta', rows, file: p + ' Campaigns' }) +
       (unmatched ? note(`${unmatched} ${p} lead${unmatched > 1 ? 's have' : ' has'} no campaign name and ${unmatched > 1 ? 'are' : 'is'} not shown here.`) : '');
   }).join('');
 }
@@ -329,7 +379,7 @@ function adsView(leads, spend) {
   const rows = groupRows(leads.filter(l => l.platform === 'Meta'), spend.filter(s => s.platform === 'Meta'), l => l.ad, s => s.ad)
     .sort((a, b) => b.s.md - a.s.md || b.s.ms - a.s.ms || b.s.lsq - a.s.lsq);
   const unmatched = leads.filter(l => l.platform === 'Meta' && !l.ad).length;
-  return table('Ads', withTotal(rows), true, 'L to NATC') +
+  return table({ id: 'ads', title: 'Ads', natc: true, natcLabel: 'L to NATC', rows }) +
     (unmatched ? note(`${unmatched} Meta lead${unmatched > 1 ? 's have' : ' has'} no ad name and ${unmatched > 1 ? 'are' : 'is'} not shown here.`) : '');
 }
 
@@ -340,16 +390,110 @@ function render() {
   $('view').innerHTML = views[view](leads, spend);
 }
 
+// ---------- Excel export ----------
+// Rupees with Indian digit grouping (₹5,62,602 / ₹55,50,378)
+const XL_FORMAT = { n: '#,##0', inr: '[>=10000000]"₹"##\\,##\\,##\\,##0;[>=100000]"₹"##\\,##\\,##0;"₹"##,##0', pct: '0%' };
+
+function exportTable(id) {
+  const { spec, shown } = SHOWN[id];
+  const heads = [spec.title, ...HEADS].concat(spec.natc ? ['NATC', spec.natcLabel || 'NATC %'] : []);
+  const line = (label, s) => [{ v: label, t: 's' }, ...metrics(s, spec.natc).map(([v, kind]) =>
+    ({ v: kind === 'inr' ? Math.round(v) : v, t: 'n', z: XL_FORMAT[kind] }))];
+  const aoa = [heads.map(h => ({ v: h, t: 's' }))];
+  if (shown.groups) shown.groups.forEach(g => { aoa.push(line(g.label, g.s)); g.subs.forEach(r => aoa.push(line('   ' + r.label, r.s))); });
+  else shown.rows.forEach(r => aoa.push(line(r.label, r.s)));
+  aoa.push(line('Grand Total', shown.total));
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+  ws['!cols'] = heads.map((h, i) => ({ wch: i ? Math.max(10, h.length + 2) : Math.min(70, Math.max(14, ...aoa.map(r => String(r[0].v).length + 2))) }));
+  const wb = XLSX.utils.book_new();
+  const name = spec.file || spec.title;
+  XLSX.utils.book_append_sheet(wb, ws, name.slice(0, 31));
+  XLSX.writeFile(wb, `Magick Home ${name} ${$('dFrom').value} to ${$('dTo').value}.xlsx`);
+}
+
+// ---------- Column filter list ----------
+let popFor = null;
+
+function openFilter(btn) {
+  const id = btn.dataset.table, col = Number(btn.dataset.col);
+  const spec = SHOWN[id].spec;
+  const opts = options(spec, col);
+  const set = (FILTERS[id] || {})[col];
+  const pop = $('filterPop');
+  const item = 'flex items-center gap-2 px-2 py-1 rounded hover:bg-brand-peach cursor-pointer text-xs text-brand-forest whitespace-nowrap';
+  pop.innerHTML =
+    `<input type="search" id="popSearch" placeholder="Search" class="w-full mb-1.5 px-2 py-1 text-xs border border-brand-beige rounded focus:border-brand-orange focus:ring-1 focus:ring-brand-orange">` +
+    `<label class="${item} font-semibold border-b border-brand-beige mb-1 pb-1.5"><input type="checkbox" id="popAll" class="text-brand-forest rounded"> Select all</label>` +
+    `<div id="popList" class="max-h-64 overflow-auto">` +
+    opts.map(o => `<label class="${item}" data-text="${esc(o.toLowerCase())}"><input type="checkbox" class="pop-opt text-brand-forest rounded" value="${esc(o)}" ${!set || set.has(o) ? 'checked' : ''}> ${esc(o)}</label>`).join('') +
+    `</div>`;
+  popFor = { id, col, opts };
+  syncAll();
+  const r = btn.getBoundingClientRect();
+  pop.hidden = false;
+  const w = pop.offsetWidth;
+  pop.style.left = Math.max(8, Math.min(window.innerWidth - w - 8, r.left + window.scrollX - 8)) + 'px';
+  pop.style.top = (r.bottom + window.scrollY + 6) + 'px';
+}
+
+function syncAll() {
+  const boxes = [...document.querySelectorAll('#popList .pop-opt')];
+  const on = boxes.filter(b => b.checked).length;
+  $('popAll').checked = on === boxes.length;
+  $('popAll').indeterminate = on > 0 && on < boxes.length;
+}
+
+function applyPop() {
+  const { id, col, opts } = popFor;
+  const ticked = [...document.querySelectorAll('#popList .pop-opt:checked')].map(b => b.value);
+  const f = FILTERS[id] || (FILTERS[id] = {});
+  if (ticked.length === opts.length) delete f[col]; else f[col] = new Set(ticked);
+  render();
+}
+
+function closePop() { $('filterPop').hidden = true; popFor = null; }
+
+$('filterPop').addEventListener('change', e => {
+  if (e.target.id === 'popAll') document.querySelectorAll('#popList .pop-opt').forEach(b => {
+    if (b.closest('label').style.display !== 'none') b.checked = e.target.checked;
+  });
+  syncAll();
+  applyPop();
+});
+$('filterPop').addEventListener('input', e => {
+  if (e.target.id !== 'popSearch') return;
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll('#popList label').forEach(l => { l.style.display = l.dataset.text.includes(q) ? '' : 'none'; });
+});
+document.addEventListener('click', e => {
+  const fb = e.target.closest('.filter-btn');
+  if (fb) { e.stopPropagation(); popFor && popFor.id === fb.dataset.table && popFor.col === Number(fb.dataset.col) ? closePop() : openFilter(fb); return; }
+  if (!e.target.closest('#filterPop')) closePop();
+  const ex = e.target.closest('.export');
+  if (ex) exportTable(ex.dataset.table);
+  const cf = e.target.closest('.clear-filters');
+  if (cf) { delete FILTERS[cf.dataset.table]; render(); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePop(); });
+
+// Numbers change with the dates, so number filters are cleared; name filters are kept
+function onDatesChanged() {
+  for (const f of Object.values(FILTERS)) for (const c of Object.keys(f)) if (c !== '0') delete f[c];
+  closePop();
+  render();
+}
+
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
   view = t.dataset.view;
+  closePop();
   document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-selected', String(b === t)));
   render();
 }));
-$('dFrom').addEventListener('change', render);
-$('dTo').addEventListener('change', render);
+$('dFrom').addEventListener('change', onDatesChanged);
+$('dTo').addEventListener('change', onDatesChanged);
 
 let DATES = [];
-$('reset').addEventListener('click', () => { $('dFrom').value = DATES[0]; $('dTo').value = DATES[DATES.length - 1]; render(); });
+$('reset').addEventListener('click', () => { $('dFrom').value = DATES[0]; $('dTo').value = DATES[DATES.length - 1]; onDatesChanged(); });
 
 const getText = url => fetch(url, { cache: 'no-store' }).then(r => r.ok ? r.text() : Promise.reject(url));
 
