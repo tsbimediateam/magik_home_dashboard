@@ -101,12 +101,15 @@ const HEADERS = [
   'Reason for Not able to Connect', 'Reason for Dead Lead',
 ];
 
+// "google" and "Google" are the same source
+const cleanSource = v => clean(v).toLowerCase() === 'google' ? 'Google' : clean(v);
+
 function toRow(r, i) {
   const [date, time] = splitCreated(r);
   return [
     String(i + 1), date, time,
     clean(r['Contact First Name']), clean(r['Contact Last Name']), clean(r['Email ID']),
-    cleanPhone(r['Phone Number']), clean(r['Contact Source']),
+    cleanPhone(r['Phone Number']), cleanSource(r['Contact Source']),
     clean(r['Source Campaign']), clean(r['Source Medium']), clean(r['Source Content']),
     clean(r['Contact Stage']), clean(r['Property City']),
     clean(r['Reason for Not able to Connect']), clean(r['Reason for Dead Lead']),
