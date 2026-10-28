@@ -1,58 +1,85 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Campaign Dashboard – Magick Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            forest: '#273D36', orange: '#E87524', ivory: '#F7F4EF', ivoryLight: '#FAF8F5',
+            beige: '#E7DFD3', peach: '#FBE8D8', sage: '#D9E2DC'
+          }
+        },
+        fontFamily: { sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'] }
+      }
+    }
+  }
+</script>
 <style>
-body { margin: 0; padding: 16px; font: 13px/1.4 Arial, sans-serif; background: #fff; color: #000; }
-.nav { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
-.nav h1 { font-size: 18px; margin: 0 0 0 8px; }
-.nav button, .nav .btn { font: inherit; padding: 5px 12px; border: 1px solid #bbb; border-radius: 4px; background: #f5f5f5; color: #000; text-decoration: none; cursor: pointer; }
-.nav button:hover, .nav .btn:hover { background: #e8e8e8; }
-.filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 12px; }
-.filters label { display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: #444; }
-.filters input, .filters button { font: inherit; font-size: 13px; padding: 5px 8px; border: 1px solid #bbb; border-radius: 4px; background: #fff; color: #000; }
-.filters button { background: #f5f5f5; cursor: pointer; }
-.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-.tab { font: inherit; padding: 8px 18px; border: 1px solid #bbb; border-radius: 4px; background: #f5f5f5; color: #000; cursor: pointer; }
-.tab:hover { background: #e8e8e8; }
-.tab[aria-selected="true"] { background: #000; border-color: #000; color: #fff; }
-h2 { font-size: 15px; margin: 18px 0 6px; }
-.wrap { overflow-x: auto; margin-bottom: 8px; }
-table { border-collapse: collapse; font-size: 12px; font-variant-numeric: tabular-nums; }
-th, td { border: 1px solid #ccc; padding: 4px 10px; white-space: nowrap; text-align: right; }
-th { background: #eee; font-weight: bold; }
-th:first-child, td:first-child { text-align: left; }
-tr.group td, tr.total td { font-weight: bold; }
-tr.total td { background: #eee; }
-tr.sub td:first-child { padding-left: 24px; }
-.note { color: #555; font-size: 12px; margin: 4px 0 0; }
+body { background-color: #F7F4EF; color: #273D36; font-family: Inter, system-ui, sans-serif; }
+.dashboard-table tbody tr { transition: background-color 0.15s ease-in-out; }
+.dashboard-table tbody tr:hover { background-color: #FBE8D8 !important; }
+.table-container::-webkit-scrollbar { height: 7px; }
+.table-container::-webkit-scrollbar-track { background: #F7F4EF; }
+.table-container::-webkit-scrollbar-thumb { background: #D9E2DC; border-radius: 4px; }
+.table-container::-webkit-scrollbar-thumb:hover { background: #E87524; }
+.tab[aria-selected="true"] { background: #273D36; color: #fff; border-color: #273D36; border-bottom: 2px solid #E87524; }
 </style>
 </head>
-<body>
-<div class="nav">
-  <button type="button" onclick="history.length > 1 ? history.back() : location.href = 'index.html'">&larr; Back</button>
-  <a class="btn" href="index.html">Home</a>
-  <h1>Campaign Dashboard</h1>
-</div>
+<body class="min-h-screen flex flex-col font-sans antialiased text-brand-forest">
+<header class="bg-white border-b-2 border-brand-orange sticky top-0 z-40 shadow-sm">
+  <div class="w-full px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
+    <div class="flex items-center space-x-5">
+      <a aria-label="Magick Home" class="flex items-center" href="index.html"><img alt="Magick Home - Where Design Meets Delight" class="h-10 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkQY5lN1-CX6Cl9IVBD0nyS8F3MpP9N5lsQF9Ccfym-Yyme9PdQj9ZrlrUC68ANKXvbY7Fo9Aks901_ldfhkza651lKy3kKOXCVz5GbXzOU7fH3Ll6xt3AHPI9FNxs0GcjcP0xCnxRJ3hqe5_WTC56EpIDoG-B4_tmOlsAWprh_rlybxlmkBzyic6I6rSzVsuckEXc9V5ezha-l00NfkxipLoxbJGWx82TRwLrSLQbMogJaYUkP72_3Q"/></a>
+      <div aria-hidden="true" class="h-6 w-px bg-brand-beige"></div>
+      <h1 class="text-xl font-bold tracking-tight text-brand-forest">Campaign Dashboard</h1>
+    </div>
+    <nav aria-label="Navigation" class="flex items-center space-x-3">
+      <button type="button" onclick="history.length > 1 ? history.back() : location.href = 'index.html'" class="inline-flex items-center px-3.5 py-1.5 text-sm font-medium rounded-lg text-brand-forest bg-white border border-brand-beige hover:border-brand-orange hover:bg-brand-peach hover:text-brand-orange transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-brand-orange">
+        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>Back</button>
+      <a href="index.html" class="inline-flex items-center px-3.5 py-1.5 text-sm font-medium rounded-lg text-brand-forest bg-white border border-brand-beige hover:border-brand-orange hover:bg-brand-peach hover:text-brand-orange transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-brand-orange">
+        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>Home</a>
+    </nav>
+  </div>
+</header>
 
-<div class="filters">
-  <label>From <input type="date" id="dFrom"></label>
-  <label>To <input type="date" id="dTo"></label>
-  <button type="button" id="reset">Reset dates</button>
-  <span id="status" class="note">Loading…</span>
-</div>
+<main class="flex-1 w-full px-6 lg:px-8 py-5 max-w-[1920px] mx-auto">
+  <section class="bg-white rounded-xl border border-brand-beige p-4 mb-5 shadow-sm">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div class="flex flex-wrap items-center gap-4">
+        <div class="flex items-center space-x-2">
+          <label class="text-xs font-semibold uppercase tracking-wider text-brand-forest" for="dFrom">From</label>
+          <input id="dFrom" type="date" class="w-40 px-3 py-1.5 text-sm font-medium bg-white border border-brand-beige rounded-lg focus:border-brand-orange focus:ring-1 focus:ring-brand-orange text-brand-forest">
+        </div>
+        <div class="flex items-center space-x-2">
+          <label class="text-xs font-semibold uppercase tracking-wider text-brand-forest" for="dTo">To</label>
+          <input id="dTo" type="date" class="w-40 px-3 py-1.5 text-sm font-medium bg-white border border-brand-beige rounded-lg focus:border-brand-orange focus:ring-1 focus:ring-brand-orange text-brand-forest">
+        </div>
+        <button id="reset" type="button" class="px-3.5 py-1.5 text-sm font-medium rounded-lg text-brand-forest bg-brand-ivory border border-brand-beige hover:border-brand-orange hover:bg-brand-peach hover:text-brand-orange transition-colors">Reset dates</button>
+      </div>
+      <div class="flex items-center text-xs font-medium text-gray-500 bg-brand-ivory px-3 py-1.5 rounded-md border border-brand-beige">
+        <svg class="w-3.5 h-3.5 mr-1.5 text-brand-orange" fill="currentColor" viewBox="0 0 20 20"><path clip-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" fill-rule="evenodd"></path></svg>
+        <span id="status">Loading…</span>
+      </div>
+    </div>
+  </section>
 
-<div class="tabs" role="tablist">
-  <button type="button" class="tab" role="tab" data-view="location" aria-selected="true">Location</button>
-  <button type="button" class="tab" role="tab" data-view="platform" aria-selected="false">Platform</button>
-  <button type="button" class="tab" role="tab" data-view="campaign" aria-selected="false">Campaign</button>
-  <button type="button" class="tab" role="tab" data-view="ads" aria-selected="false">Ads</button>
-</div>
+  <nav aria-label="Dashboard views" role="tablist" class="flex flex-wrap items-center gap-2 mb-4">
+    <button type="button" role="tab" data-view="location" aria-selected="true" class="tab px-6 py-2 text-sm font-semibold rounded-lg bg-white text-brand-forest border border-brand-beige hover:bg-brand-peach hover:text-brand-orange transition-all duration-150">Location</button>
+    <button type="button" role="tab" data-view="platform" aria-selected="false" class="tab px-6 py-2 text-sm font-semibold rounded-lg bg-white text-brand-forest border border-brand-beige hover:bg-brand-peach hover:text-brand-orange transition-all duration-150">Platform</button>
+    <button type="button" role="tab" data-view="campaign" aria-selected="false" class="tab px-6 py-2 text-sm font-semibold rounded-lg bg-white text-brand-forest border border-brand-beige hover:bg-brand-peach hover:text-brand-orange transition-all duration-150">Campaign</button>
+    <button type="button" role="tab" data-view="ads" aria-selected="false" class="tab px-6 py-2 text-sm font-semibold rounded-lg bg-white text-brand-forest border border-brand-beige hover:bg-brand-peach hover:text-brand-orange transition-all duration-150">Ads</button>
+  </nav>
 
-<div id="view"></div>
+  <div id="view"></div>
+</main>
 
 <script>
 const clean = s => (s ?? '').toString().trim();
@@ -187,20 +214,49 @@ function stats(leads, spend) {
   };
 }
 
-function cells(s, natc) {
+function cells(s, natc, total) {
   const c = [s.lsq, s.ql, s.ms, s.md, inr(s.spend), per(s.spend, s.lsq), per(s.spend, s.ql), per(s.spend, s.ms),
     per(s.spend, s.md), pct(s.ql, s.lsq), pct(s.ms, s.ql), pct(s.md, s.ms)];
   if (natc) c.push(s.natc, pct(s.natc, s.lsq));
-  return c.map(v => `<td>${typeof v === 'number' ? v.toLocaleString('en-IN') : v}</td>`).join('');
+  const line = total ? 'border-brand-forest/20' : 'border-brand-beige';
+  return c.map((v, i) => {
+    const pad = i === 4 ? 'px-4' : 'px-3';
+    const weight = i === 4 && !total ? ' font-semibold' : '';
+    const edge = i === c.length - 1 ? '' : ` border-r ${line}`;
+    return `<td class="py-2.5 ${pad} text-right${edge}${weight}">${typeof v === 'number' ? v.toLocaleString('en-IN') : v}</td>`;
+  }).join('');
 }
+
+// Row styles from the design: city rows in sage, platform rows indented, Grand Total in the footer
+const ROW = {
+  group: { tr: 'bg-brand-sage font-bold', td: 'text-sm font-semibold' },
+  sub: { tr: 'bg-white', td: 'pl-8 font-medium text-gray-700' },
+  '': { tr: 'bg-white', td: 'font-semibold' },
+};
 
 function table(firstHeader, rows, natc, natcLabel = 'NATC %') {
   const heads = [firstHeader, 'LSQ Leads', 'QL', 'MS', 'MD', 'Amount Spent', 'CPL', 'CPQL', 'CPMS', 'CPMD', 'QL%', 'MS%', 'MD%']
     .concat(natc ? ['NATC', natcLabel] : []);
-  return `<div class="wrap"><table><thead><tr>${heads.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>` +
-    rows.map(r => `<tr class="${r.cls || ''}"><td>${esc(r.label)}</td>${cells(r.s, natc)}</tr>`).join('') +
-    '</tbody></table></div>';
+  const th = heads.map((h, i) => `<th scope="col" class="py-3 ${i === 0 || i === 5 ? 'px-4' : 'px-3'} ${i === 0 ? 'text-left' : 'text-right'}${i === 5 ? ' font-bold' : ''}${i === heads.length - 1 ? '' : ' border-r border-white/10'}${i === 0 && firstHeader === 'Ads' ? ' min-w-[280px]' : ''}">${h}</th>`).join('');
+  const body = rows.filter(r => r.cls !== 'total');
+  const total = rows.find(r => r.cls === 'total');
+  let n = 0;
+  const tr = body.map(r => {
+    const st = ROW[r.cls || ''];
+    // Plain rows alternate white and ivory
+    const bg = r.cls ? st.tr : (n++ % 2 ? 'bg-brand-ivoryLight' : 'bg-white');
+    const trClass = r.cls === 'sub' ? (r.label === 'Meta' ? 'bg-brand-ivoryLight' : 'bg-white') : r.cls ? st.tr : bg;
+    return `<tr class="${trClass}"><td class="py-2.5 px-4 text-left border-r border-brand-beige ${st.td}">${esc(r.label)}</td>${cells(r.s, natc)}</tr>`;
+  }).join('');
+  const foot = total ? `<tfoot class="bg-brand-beige font-extrabold text-brand-forest border-t-2 border-brand-orange text-xs"><tr><td class="py-3 px-4 text-left border-r border-brand-forest/20">Grand Total</td>${cells(total.s, natc, true)}</tr></tfoot>` : '';
+  return `<div class="bg-white border border-brand-beige rounded-xl shadow-sm overflow-hidden mb-3"><div class="table-container overflow-x-auto">
+    <table class="dashboard-table w-full text-xs text-left border-collapse whitespace-nowrap">
+    <thead class="bg-brand-forest text-white uppercase tracking-wider text-[11px] font-semibold border-b-2 border-brand-orange"><tr>${th}</tr></thead>
+    <tbody class="divide-y divide-brand-beige text-brand-forest">${tr}</tbody>${foot}</table></div></div>`;
 }
+
+const note = text => `<p class="text-xs text-gray-500 italic pl-1 mb-4 flex items-center"><svg class="w-3.5 h-3.5 text-brand-orange mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>${text}</p>`;
+const heading = (text, dot) => `<div class="mb-2.5 mt-2 flex items-center"><h2 class="text-base font-bold text-brand-forest flex items-center"><span class="w-2.5 h-2.5 rounded-full ${dot} inline-block mr-2"></span>${text}</h2></div>`;
 
 const sum = (list, f) => list.reduce((a, x) => a + f(x), 0);
 const add = (a, b) => ({ lsq: a.lsq + b.lsq, ql: a.ql + b.ql, ms: a.ms + b.ms, md: a.md + b.md, natc: a.natc + b.natc, spend: a.spend + b.spend });
@@ -230,7 +286,7 @@ function locationView(leads, spend) {
   rows.push({ label: 'Grand Total', cls: 'total', s: total });
   const noCity = leads.filter(l => !l.city).length;
   return table('Location', rows, true) +
-    (noCity ? `<p class="note">${noCity} lead${noCity > 1 ? 's have' : ' has'} no Store Location or Property City and ${noCity > 1 ? 'are' : 'is'} not shown.</p>` : '');
+    (noCity ? note(`${noCity} lead${noCity > 1 ? 's have' : ' has'} no Store Location or Property City and ${noCity > 1 ? 'are' : 'is'} not shown.`) : '');
 }
 
 function platformView(leads, spend) {
@@ -264,8 +320,8 @@ function campaignView(leads, spend) {
     const rows = groupRows(leads.filter(l => l.platform === p), spend.filter(s => s.platform === p), l => l.campaign, s => s.campaign)
       .sort(byName);
     const unmatched = leads.filter(l => l.platform === p && !l.campaign).length;
-    return `<h2>${p}</h2>` + table(p, withTotal(rows), p === 'Meta') +
-      (unmatched ? `<p class="note">${unmatched} ${p} lead${unmatched > 1 ? 's have' : ' has'} no campaign name and ${unmatched > 1 ? 'are' : 'is'} not shown here.</p>` : '');
+    return heading(p, p === 'Meta' ? 'bg-brand-orange' : 'bg-brand-forest') + table(p, withTotal(rows), p === 'Meta') +
+      (unmatched ? note(`${unmatched} ${p} lead${unmatched > 1 ? 's have' : ' has'} no campaign name and ${unmatched > 1 ? 'are' : 'is'} not shown here.`) : '');
   }).join('');
 }
 
@@ -274,7 +330,7 @@ function adsView(leads, spend) {
     .sort((a, b) => b.s.md - a.s.md || b.s.ms - a.s.ms || b.s.lsq - a.s.lsq);
   const unmatched = leads.filter(l => l.platform === 'Meta' && !l.ad).length;
   return table('Ads', withTotal(rows), true, 'L to NATC') +
-    (unmatched ? `<p class="note">${unmatched} Meta lead${unmatched > 1 ? 's have' : ' has'} no ad name and ${unmatched > 1 ? 'are' : 'is'} not shown here.</p>` : '');
+    (unmatched ? note(`${unmatched} Meta lead${unmatched > 1 ? 's have' : ' has'} no ad name and ${unmatched > 1 ? 'are' : 'is'} not shown here.`) : '');
 }
 
 function render() {
