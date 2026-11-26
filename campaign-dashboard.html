@@ -115,12 +115,12 @@ const MD_STATUSES = new Set([
   'Meeting Done', 'Meeting Done - Sep MS', 'Meeting Done - Aug MS', 'Meeting Done - Jul MS', 'Meeting Done - Oct MS', 'Meeting Done on Sep',
 ]);
 
-const META_SOURCES = new Set(['meta', 'fb lead ads', 'online paid - meta']);
+const META_SOURCES = new Set(['meta', 'fb', 'fb lead ads', 'online paid - meta']);
 const CITIES = ['Bangalore', 'Chennai', 'Coimbatore'];
 // Spend from campaigns without a city code is split across the cities
 const ALL_CITIES_SPLIT = { Bangalore: 0.4, Chennai: 0.4, Coimbatore: 0.2 };
 // Campaigns that bring no leads; their spend is left out of every view
-const NON_LEAD_CAMPAIGN = /sofa|rambha|ramba-video|page like|brand film/i;
+const NON_LEAD_CAMPAIGN = /sofa|rambha|ramba|page like|brand film/i;
 
 // Campaign and ad names are matched ignoring capitals, spaces, hyphens, underscores and "+" (a space in tracking links)
 const key = s => clean(s).toLowerCase().replace(/[\s\-_+]+/g, '');

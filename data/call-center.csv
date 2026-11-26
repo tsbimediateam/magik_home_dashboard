@@ -46,7 +46,7 @@ Sr. No,Month,Location,Lead Source,Phone number,QL month,Meeting Status
 45,Aug-26,Bangalore,Meta,6360563942,,Meeting Done
 46,Aug-26,Chennai,Meta,7358641462,,Meeting Done
 47,Aug-26,Chennai,Meta,9810160413,,Dead Lead
-48,Aug-26,Coimbatore,,9886497338,,Meeting Scheduled
+48,Aug-26,Coimbatore,,9886497338,,Meeting Done
 49,Aug-26,Chennai,Meta,9943341299,,Meeting Scheduled
 50,Aug-26,Chennai,Meta,9884039222,,Active
 51,Aug-26,Bangalore,Meta,7829996776,,Meeting Done
@@ -90,27 +90,27 @@ Sr. No,Month,Location,Lead Source,Phone number,QL month,Meeting Status
 89,Aug-26,Bangalore,Meta,9606287360,,Dead Lead
 90,Aug-26,Bangalore,Google,9880302139,,Meeting Scheduled
 91,Aug-26,Bangalore,Meta,9739960936,,Meeting Scheduled
-92,Aug-26,Coimbatore,FB Lead Ads,9003033993,,Meeting Scheduled
+92,Aug-26,Coimbatore,FB Lead Ads,9003033993,,Meeting Done - Jul MS
 93,Aug-26,Coimbatore,Meta,8317492158,,Meeting Done
-94,Aug-26,Chennai,Meta,9444989343,,Active
+94,Aug-26,Chennai,Meta,9444989343,,Meeting Done - Aug MS
 95,Aug-26,Chennai,FB Lead Ads,9840077587,,Meeting Done
 96,Aug-26,Bangalore,Meta,8867787665,,Meeting Done
 97,Aug-26,Bangalore,Meta,9740619344,,Waiting for Floor Plan
 98,Aug-26,Chennai,Wati,9841290759,,Active
 99,Aug-26,Coimbatore,Meta,9385506022,,Waiting for Floor Plan
 100,Aug-26,Bangalore,Meta,8073438349,,Meeting Done
-101,Aug-26,Coimbatore,Meta,8680960472,,Meeting Done on Sep
+101,Aug-26,Coimbatore,Meta,8680960472,,Meeting Done - Aug MS
 102,Aug-26,Bangalore,Organic,9591108108,,Waiting for Floor Plan
 103,Aug-26,Coimbatore,Meta,8903782910,,Dead Lead
 104,Aug-26,Bangalore,Meta,9900501000,,Waiting for Floor Plan
-105,Aug-26,Chennai,Meta,9789099627,,Waiting for Floor Plan
+105,Aug-26,Chennai,Meta,9789099627,,Active
 106,Aug-26,Bangalore,Meta,9742122212,,Meeting Scheduled
 107,Aug-26,Chennai,Meta,9742030340,,Meeting Done
 108,Aug-26,Bangalore,Meta,9560091632,,Dead Lead
-109,Aug-26,Chennai,Meta,9500145134,,Active
+109,Aug-26,Chennai,Meta,9500145134,,Meeting Done - Aug MS
 110,Aug-26,Bangalore,Meta,9845917193,,Active
 111,Aug-26,Chennai,Meta,9629304465,,Waiting for Floor Plan
-112,Aug-26,Bangalore,Meta,9916133965,,Meeting Done on Sep
+112,Aug-26,Bangalore,Meta,9916133965,,Meeting Done - Aug MS
 113,Aug-26,Bangalore,Meta,9980843158,,Dead Lead
 114,Aug-26,Chennai,Meta,9944828185,,Meeting Done
 115,Aug-26,Coimbatore,Meta,7010938477,,Meeting Done - Aug MS
@@ -121,12 +121,12 @@ Sr. No,Month,Location,Lead Source,Phone number,QL month,Meeting Status
 120,Aug-26,Bangalore,Meta,8861461611,,On Hold
 121,Aug-26,Chennai,Meta,9908195000,,Meeting Done
 122,Aug-26,Coimbatore,Meta,9789502559,,On Hold
-123,Aug-26,Chennai,Meta,9884094497,,Waiting for Floor Plan
+123,Aug-26,Chennai,Meta,9884094497,,Dead Lead
 124,Aug-26,Chennai,Meta,9148088331,,Meeting Done
 125,Aug-26,Chennai,Meta,7010045481,,Meeting Done
 126,Aug-26,Coimbatore,Meta,9597509520,,Waiting for Floor Plan
 127,Aug-26,Coimbatore,Meta,8939365231,,Waiting for Floor Plan
-128,Aug-26,Coimbatore,Meta,9994230430,,Waiting for Floor Plan
+128,Aug-26,Coimbatore,Meta,9994230430,,Meeting Done
 129,Aug-26,Bangalore,Meta,9845842962,,Dead Lead
 130,Aug-26,Chennai,Meta,9841931496,,Meeting Done - Aug MS
 131,Aug-26,Chennai,Meta,9698766662,,Dead lead
@@ -140,7 +140,7 @@ Sr. No,Month,Location,Lead Source,Phone number,QL month,Meeting Status
 139,Sep-26,Coimbatore,FB Lead Ads,9003033993,Aug-2026,Meeting Done - Jul MS
 140,Sep-26,Chennai,Meta,9444989343,Sep-2026,Meeting Done - Aug MS
 141,Sep-26,Chennai,Meta,7299006269,Apr-2026,Meeting Done
-142,Sep-26,Coimbatore,Meta,9886497338,01-Aug-2026,Meeting Done
+142,Sep-26,Coimbatore,Meta,9886497338,Aug-2026,Meeting Done
 143,Sep-26,Coimbatore,FB Lead Ads,9843186116,Jul-2026,Meeting Done - Jul MS
 144,Sep-26,Chennai,Google,8220190361,Sep-2026,Meeting Done
 145,Sep-26,Bangalore,Meta,9790234056,Sep-2026,Dead Lead
@@ -290,158 +290,261 @@ Sr. No,Month,Location,Lead Source,Phone number,QL month,Meeting Status
 289,Sep-26,Bangalore,Meta,8123614070,Sep-2026,Dead Lead
 290,Sep-26,Coimbatore,Meta,9843145431,Sep-2026,Waiting for Floor Plan
 291,Sep-26,Chennai,Meta,8344508565,Sep-2026,Meeting Done - Sep MS
-292,Oct-26,Coimbatore,FB Lead Ads,9942893942,Jun-2026,Meeting Done - Sep MS
-293,Oct-26,Bangalore,Meta,9940393565,Sep-2026,Meeting Done - Sep MS
-294,Oct-26,Chennai,Meta,8344508565,Sep-2026,Meeting Done - Sep MS
-295,Oct-26,Chennai,Meta,9500687444,Sep-2026,Meeting Done - Sep MS
-296,Oct-26,Chennai,Meta,9841931496,Aug-2026,Meeting Done - Aug MS
-297,Oct-26,Chennai,FB Lead Ads,9840744310,Jun-2026,Meeting Done
-298,Oct-26,Chennai,Meta,9884330993,Sep-2026,Meeting Done - Sep MS
-299,Oct-26,Chennai,Meta,9841906266,Sep-2026,Meeting Done - Sep MS
-300,Oct-26,Coimbatore,Meta,9150478267,Oct-2026,Meeting Done
-301,Oct-26,Chennai,Meta,9962636465,Sep-2026,Meeting Done - Sep MS
-302,Oct-26,Bangalore,Meta,9845306341,Oct-2026,Meeting Done
-303,Oct-26,Bangalore,Meta,9008699791,Oct-2026,Meeting Done
-304,Oct-26,Chennai,Organic,9942198838,Sep-2026,Active
-305,Oct-26,Bangalore,Toll-free,8056441562,Oct-2026,Meeting Done
-306,Oct-26,Chennai,Organic,9626932344,Aug-2026,Meeting Done - Aug MS
+292,Oct-26,Bangalore,Facebook,9945620999,Oct-2026,Dead Lead
+293,Oct-26,Chennai,FB Lead Ads,9840744310,Jun-2026,Meeting Done
+294,Oct-26,Coimbatore,FB Lead Ads,9942893942,Jun-2026,Meeting Done - Sep MS
+295,Oct-26,Chennai,Organic,9626932344,Aug-2026,Meeting Done - Aug MS
+296,Oct-26,Coimbatore,Meta,7010938477,Aug-2026,Meeting Done - Aug MS
+297,Oct-26,Chennai,Meta,9841931496,Aug-2026,Meeting Done - Aug MS
+298,Oct-26,Chennai,Meta,9500110790,Oct-2026,Active
+299,Oct-26,Chennai,Meta,9962636465,Sep-2026,Meeting Done - Sep MS
+300,Oct-26,Coimbatore,Meta,9894748077,Sep-2026,Meeting Done - Sep MS
+301,Oct-26,Coimbatore,Meta,8072481372,Sep-2026,Meeting Done
+302,Oct-26,Bangalore,Meta,9940393565,Sep-2026,Meeting Done - Sep MS
+303,Oct-26,Chennai,Meta,8778905304,Oct-2026,Meeting Done
+304,Oct-26,Bangalore,Meta,9380230098,Oct-2026,Meeting Done
+305,Oct-26,Chennai,Meta,9841906266,Sep-2026,Meeting Done - Sep MS
+306,Oct-26,Chennai,Organic,9942198838,Sep-2026,Active
 307,Oct-26,Chennai,Meta,7401111176,Sep-2026,Meeting Done - Sep MS
-308,Oct-26,Coimbatore,Meta,9894748077,Sep-2026,Meeting Done - Sep MS
-309,Oct-26,Coimbatore,Meta,9790889996,Oct-2026,Dead Lead
-310,Oct-26,Bangalore,Meta,9900934211,Oct-2026,On Hold
-311,Oct-26,Bangalore,Meta,9841930038,Oct-2026,Dead Lead
-312,Oct-26,Bangalore,Meta,8130696805,Oct-2026,Meeting Done
-313,Oct-26,Chennai,Meta,7904037088,Oct-2026,Meeting Done
-314,Oct-26,Coimbatore,Meta,9003674143,Oct-2026,Dead Lead
-315,Oct-26,Bangalore,Meta,9566315784,Oct-2026,Dead Lead
-316,Oct-26,Bangalore,Google,9711050925,Oct-2026,Meeting Done
-317,Oct-26,Bangalore,Meta,9845517183,Oct-2026,Dead Lead
-318,Oct-26,Coimbatore,Meta,9626660101,Oct-2026,Dead Lead
-319,Oct-26,Chennai,Meta,8939618439,Oct-2026,Dead Lead
-320,Oct-26,Coimbatore,Meta,7708998869,Oct-2026,Dead Lead
-321,Oct-26,Chennai,Meta,8778905304,Oct-2026,Meeting Done
-322,Oct-26,Chennai,Meta,9840297546,Oct-2026,Dead Lead
-323,Oct-26,Bangalore,Meta,9535644656,Oct-2026,Meeting Done
-324,Oct-26,Chennai,Meta,9840499210,Oct-2026,Meeting Incomplete
-325,Oct-26,Coimbatore,Meta,8870827969,Oct-2026,Meeting Done
-326,Oct-26,Bangalore,Meta,9902383453,Oct-2026,Dead Lead
-327,Oct-26,Bangalore,Meta,8123497921,Oct-2026,Dead Lead
-328,Oct-26,Chennai,Meta,9600090064,Oct-2026,Meeting Done
-329,Oct-26,Bangalore,Meta,9620075400,Oct-2026,Meeting Done
-330,Oct-26,Chennai,Meta,9841910901,Oct-2026,Meeting Done
-331,Oct-26,Chennai,Meta,9739425753,Sep-2026,Meeting Done - Sep MS
-332,Oct-26,Chennai,Meta,6374295387,Oct-2026,Meeting Done
-333,Oct-26,Bangalore,Meta,9901840003,Oct-2026,Meeting Done
-334,Oct-26,Chennai,Meta,9790692756,Oct-2026,Dead Lead
-335,Oct-26,Chennai,Meta,7558494018,Oct-2026,Dead Lead
-336,Oct-26,Coimbatore,Meta,8610120936,Oct-2026,On Hold
-337,Oct-26,Chennai,Meta,9840524496,Oct-2026,Meeting Done
-338,Oct-26,Bangalore,Google,9892182406,Oct-2026,Meeting Done
-339,Oct-26,Chennai,Meta,8754876318,Oct-2026,Meeting Done
-340,Oct-26,Bangalore,Facebook,9945620999,Oct-2026,Waiting for Floor Plan
-341,Oct-26,Bangalore,Meta,7990078250,Oct-2026,Meeting Done
-342,Oct-26,Chennai,Meta,8925890672,Oct-2026,Meeting Done
-343,Oct-26,Bangalore,Meta,7760471919,Oct-2026,Active
-344,Oct-26,Chennai,Meta,9344938248,Oct-2026,Meeting Done
-345,Oct-26,Bangalore,Meta,9741111597,Oct-2026,Meeting Done
-346,Oct-26,Coimbatore,Meta,9003308788,Oct-2026,Meeting Done
-347,Oct-26,Bangalore,Meta,9611225920,Oct-2026,Meeting Done
-348,Oct-26,Bangalore,Meta,9880482266,Oct-2026,Meeting Done
-349,Oct-26,Coimbatore,Meta,7904352595,Oct-2026,Meeting Done
-350,Oct-26,Coimbatore,Meta,9655593600,Oct-2026,Dead Lead
-351,Oct-26,Chennai,Meta,7397499667,Oct-2026,On Hold
-352,Oct-26,Chennai,Meta,9791691896,Oct-2026,Meeting Incomplete
-353,Oct-26,Bangalore,Meta,8884820150,Oct-2026,Meeting Done
-354,Oct-26,Bangalore,Meta,9908235922,Oct-2026,Meeting Done
-355,Oct-26,Bangalore,Meta,9980024964,Oct-2026,Dead Lead
-356,Oct-26,Bangalore,Meta,6363273180,Oct-2026,Meeting Scheduled
-357,Oct-26,Bangalore,Google,9535502657,Oct-2026,On Hold
-358,Oct-26,Coimbatore,Meta,9442555665,Oct-2026,Meeting Done
-359,Oct-26,Bangalore,Meta,9008288433,Oct-2026,Meeting Done
-360,Oct-26,Coimbatore,Meta,8248965846,Oct-2026,Dead Lead
-361,Oct-26,Chennai,Meta,8056961548,Oct-2026,Active
-362,Oct-26,Coimbatore,Meta,8667833480,Oct-2026,On Hold
-363,Oct-26,Chennai,Organic,7550095977,Oct-2026,Active
-364,Oct-26,Bangalore,Meta,9944012200,Oct-2026,Meeting Done
-365,Oct-26,Chennai,Meta,9940408213,Oct-2026,Active
-366,Oct-26,Bangalore,Meta,8826928870,Oct-2026,Meeting Done
-367,Oct-26,Bangalore,Meta,9380230098,Oct-2026,Meeting Done
-368,Oct-26,Coimbatore,Meta,9952898803,Oct-2026,Meeting Done
-369,Oct-26,Chennai,Meta,9841086641,Oct-2026,Meeting Done
-370,Oct-26,Coimbatore,Meta,9944405477,Oct-2026,On Hold
-371,Oct-26,Chennai,Meta,9566034885,Oct-2026,Meeting Done
-372,Oct-26,Chennai,Inbound,9884013085,Oct-2026,Meeting Done
-373,Oct-26,Chennai,Meta,9500110790,Oct-2026,Active
-374,Oct-26,Chennai,Meta,8973317823,Oct-2026,Meeting Done
-375,Oct-26,Chennai,Meta,9500077265,Oct-2026,Active
-376,Oct-26,Bangalore,Meta,9108450110,Oct-2026,Dead Lead
-377,Oct-26,Coimbatore,Meta,9843011128,Oct-2026,Dead Lead
-378,Oct-26,Bangalore,Meta,9980916336,Oct-2026,Dead Lead
-379,Oct-26,Bangalore,Meta,9742777666,Sep-2026,Meeting Done
-380,Oct-26,Bangalore,Meta,9677094244,Oct-2026,Active
-381,Oct-26,Bangalore,Meta,9099068006,Oct-2026,Meeting Done
-382,Oct-26,Chennai,Meta,9444624966,Oct-2026,Dead Lead
-383,Oct-26,Bangalore,Meta,9632314730,Oct-2026,Waiting for Floor Plan
-384,Oct-26,Chennai,Meta,9894089148,Oct-2026,Meeting Done
-385,Oct-26,Bangalore,Meta,7760053169,Oct-2026,On Hold
-386,Oct-26,Bangalore,Meta,9902944550,Oct-2026,On Hold
-387,Oct-26,Bangalore,Meta,8861431726,Oct-2026,Meeting Done
-388,Oct-26,Bangalore,Meta,9739049212,Oct-2026,Meeting Done
-389,Oct-26,Coimbatore,Meta,7010938477,Aug-2026,Meeting Done - Aug MS
-390,Oct-26,Chennai,Meta,6369996389,Oct-2026,Active
-391,Oct-26,Bangalore,Meta,9483915686,Oct-2026,Dead Lead
-392,Oct-26,Bangalore,Inbound,9791678506,Oct-2026,Meeting Done
-393,Oct-26,Bangalore,Meta,9731651564,Oct-2026,Dead Lead
-394,Oct-26,Coimbatore,Meta,8072481372,Sep-2026,Meeting Done
-395,Oct-26,Chennai,Website,9840009810,Oct-2026,Active
-396,Oct-26,Bangalore,Meta,9945666080,Oct-2026,On Hold
-397,Oct-26,Coimbatore,Meta,9789092183,Oct-2026,Meeting Done
-398,Oct-26,Chennai,Meta,9445721985,Oct-2026,On Hold
-399,Oct-26,Chennai,Meta,8939975055,Oct-2026,Active
-400,Oct-26,Bangalore,Meta,9972077299,Oct-2026,Meeting Scheduled
+308,Oct-26,Chennai,Meta,9500687444,Sep-2026,Meeting Done - Sep MS
+309,Oct-26,Bangalore,Meta,9742777666,Sep-2026,Meeting Done
+310,Oct-26,Chennai,Meta,8344508565,Sep-2026,Meeting Done - Sep MS
+311,Oct-26,Chennai,Meta,9884330993,Sep-2026,Meeting Done - Sep MS
+312,Oct-26,Coimbatore,Meta,9790889996,Oct-2026,Dead Lead
+313,Oct-26,Bangalore,Meta,9739049212,Oct-2026,Meeting Done
+314,Oct-26,Bangalore,Meta,9900934211,Oct-2026,On Hold
+315,Oct-26,Bangalore,Meta,9841930038,Oct-2026,Dead Lead
+316,Oct-26,Bangalore,Meta,9845306341,Oct-2026,Meeting Done
+317,Oct-26,Coimbatore,Meta,9150478267,Oct-2026,Meeting Done
+318,Oct-26,Coimbatore,Meta,9003674143,Oct-2026,Dead Lead
+319,Oct-26,Coimbatore,Meta,7708998869,Oct-2026,Dead Lead
+320,Oct-26,Bangalore,Meta,9902383453,Oct-2026,Dead Lead
+321,Oct-26,Chennai,Meta,8754876318,Oct-2026,Meeting Done
+322,Oct-26,Bangalore,Meta,9566315784,Oct-2026,Dead Lead
+323,Oct-26,Bangalore,Meta,9008699791,Oct-2026,Meeting Done
+324,Oct-26,Bangalore,Meta,9845517183,Oct-2026,Dead Lead
+325,Oct-26,Coimbatore,Meta,9626660101,Oct-2026,Dead Lead
+326,Oct-26,Chennai,Meta,8939618439,Oct-2026,Dead Lead
+327,Oct-26,Chennai,Meta,9840499210,Oct-2026,Meeting Incomplete
+328,Oct-26,Chennai,Meta,7904037088,Oct-2026,Meeting Done
+329,Oct-26,Chennai,Meta,9840297546,Oct-2026,Dead Lead
+330,Oct-26,Chennai,Meta,8973317823,Oct-2026,Meeting Done
+331,Oct-26,Bangalore,Meta,9535644656,Oct-2026,Meeting Done
+332,Oct-26,Bangalore,Meta,8130696805,Oct-2026,Meeting Done
+333,Oct-26,Chennai,Meta,9841086641,Oct-2026,Meeting Done
+334,Oct-26,Bangalore,Meta,8123497921,Oct-2026,Dead Lead
+335,Oct-26,Coimbatore,Meta,8870827969,Oct-2026,Meeting Done
+336,Oct-26,Bangalore,Toll-free,8056441562,Oct-2026,Meeting Done
+337,Oct-26,Bangalore,Google,9711050925,Oct-2026,Meeting Done
+338,Oct-26,Chennai,Meta,9600090064,Oct-2026,Meeting Done
+339,Oct-26,Bangalore,Meta,9944012200,Oct-2026,Meeting Done
+340,Oct-26,Chennai,Meta,9790692756,Oct-2026,Dead Lead
+341,Oct-26,Bangalore,Meta,9880482266,Oct-2026,Meeting Done
+342,Oct-26,Chennai,Meta,9840524496,Oct-2026,Meeting Done
+343,Oct-26,Chennai,Meta,7558494018,Oct-2026,Dead Lead
+344,Oct-26,Coimbatore,Meta,8610120936,Oct-2026,On Hold
+345,Oct-26,Chennai,Meta,6374295387,Oct-2026,Meeting Done
+346,Oct-26,Bangalore,Meta,9620075400,Oct-2026,Meeting Done
+347,Oct-26,Chennai,Meta,9841910901,Oct-2026,Meeting Done
+348,Oct-26,Bangalore,Meta,7760471919,Oct-2026,Active
+349,Oct-26,Chennai,Meta,8925890672,Oct-2026,Meeting Done
+350,Oct-26,Bangalore,Meta,9901840003,Oct-2026,Meeting Done
+351,Oct-26,Chennai,Meta,9344938248,Oct-2026,Meeting Done
+352,Oct-26,Coimbatore,Meta,9655593600,Oct-2026,Dead Lead
+353,Oct-26,Bangalore,Meta,9611225920,Oct-2026,Meeting Done
+354,Oct-26,Chennai,Meta,7397499667,Oct-2026,On Hold
+355,Oct-26,Chennai,Meta,9791691896,Oct-2026,Meeting Incomplete
+356,Oct-26,Bangalore,Meta,9008288433,Oct-2026,Meeting Done
+357,Oct-26,Bangalore,Meta,9741111597,Oct-2026,Meeting Done
+358,Oct-26,Bangalore,Meta,9980024964,Oct-2026,Dead Lead
+359,Oct-26,Bangalore,Google,9892182406,Oct-2026,Meeting Done
+360,Oct-26,Bangalore,Meta,7990078250,Oct-2026,Meeting Done
+361,Oct-26,Chennai,Meta,9940408213,Oct-2026,Meeting Done - Oct MS
+362,Oct-26,Bangalore,Meta,6363273180,Oct-2026,Meeting Done - Sep MS
+363,Oct-26,Bangalore,Google,9535502657,Oct-2026,On Hold
+364,Oct-26,Coimbatore,Meta,8248965846,Oct-2026,Dead Lead
+365,Oct-26,Chennai,Meta,8056961548,Oct-2026,Meeting Done - Oct MS
+366,Oct-26,Coimbatore,Meta,8667833480,Oct-2026,On Hold
+367,Oct-26,Chennai,Organic,7550095977,Oct-2026,Active
+368,Oct-26,Coimbatore,Meta,9003308788,Oct-2026,Meeting Done
+369,Oct-26,Bangalore,Meta,9483915686,Oct-2026,Meeting Done - Oct MS
+370,Oct-26,Bangalore,Meta,8826928870,Oct-2026,Meeting Done
+371,Oct-26,Coimbatore,Meta,7904352595,Oct-2026,Meeting Done
+372,Oct-26,Coimbatore,Meta,9944405477,Oct-2026,On Hold
+373,Oct-26,Coimbatore,Meta,9843011128,Oct-2026,Meeting Done - Oct MS
+374,Oct-26,Bangalore,Meta,8884820150,Oct-2026,Meeting Done
+375,Oct-26,Bangalore,Meta,9908235922,Oct-2026,Meeting Done
+376,Oct-26,Coimbatore,Meta,9952898803,Oct-2026,Meeting Done
+377,Oct-26,Chennai,Meta,9500077265,Oct-2026,Active
+378,Oct-26,Coimbatore,Meta,9442555665,Oct-2026,Meeting Done
+379,Oct-26,Bangalore,Meta,9108450110,Oct-2026,Dead Lead
+380,Oct-26,Chennai,Meta,9566034885,Oct-2026,Meeting Done
+381,Oct-26,Bangalore,Meta,9980916336,Oct-2026,Dead Lead
+382,Oct-26,Bangalore,Meta,9677094244,Oct-2026,Dead Lead
+383,Oct-26,Chennai,Meta,6369996389,Oct-2026,Active
+384,Oct-26,Bangalore,Inbound,9791678506,Oct-2026,Meeting Done
+385,Oct-26,Bangalore,Meta,9099068006,Oct-2026,Meeting Done
+386,Oct-26,Chennai,Meta,9444624966,Oct-2026,Dead Lead
+387,Oct-26,Bangalore,Meta,9632314730,Oct-2026,On Hold
+388,Oct-26,Bangalore,Meta,9740079172,Oct-2026,Meeting Done
+389,Oct-26,Chennai,Meta,9894089148,Oct-2026,Meeting Done
+390,Oct-26,Bangalore,Meta,7760053169,Oct-2026,On Hold
+391,Oct-26,Bangalore,Meta,9902944550,Oct-2026,On Hold
+392,Oct-26,Chennai,Inbound,9884013085,Oct-2026,Meeting Done
+393,Oct-26,Coimbatore,Meta,9047041250,Oct-2026,On Hold
+394,Oct-26,Bangalore,Meta,9972499756,Oct-2026,Meeting Done
+395,Oct-26,Bangalore,Meta,9731651564,Oct-2026,Dead Lead
+396,Oct-26,Chennai,Website,9840009810,Oct-2026,Active
+397,Oct-26,Chennai,Meta,8939975055,Oct-2026,Active
+398,Oct-26,Bangalore,Meta,9945666080,Oct-2026,On Hold
+399,Oct-26,Chennai,Meta,9790936684,Oct-2026,Meeting Done
+400,Oct-26,Chennai,Meta,9445721985,Oct-2026,On Hold
 401,Oct-26,Bangalore,Meta,9448129777,Oct-2026,On Hold
 402,Oct-26,Chennai,Meta,9551984498,Oct-2026,Meeting Done - Oct MS
-403,Oct-26,Bangalore,Meta,9740079172,Oct-2026,Meeting Done
-404,Oct-26,Chennai,Meta,9790936684,Oct-2026,Meeting Done
-405,Oct-26,Chennai,Meta,8925417738,Oct-2026,Active
-406,Oct-26,Chennai,Meta,8110977770,Oct-2026,Meeting Done
-407,Oct-26,Coimbatore,Meta,9047041250,Oct-2026,On Hold
-408,Oct-26,Coimbatore,Meta,9620555658,Oct-2026,Waiting for Floor Plan
-409,Oct-26,Chennai,Meta,8197168555,Oct-2026,Meeting Done
-410,Oct-26,Coimbatore,Meta,9511701064,Oct-2026,Meeting Done - Oct MS
-411,Oct-26,Chennai,Inbound,9840461099,Oct-2026,Active
-412,Oct-26,Bangalore,Meta,9663611633,Oct-2026,Active
-413,Oct-26,Coimbatore,Inbound,9710555252,Oct-2026,Dead Lead
-414,Oct-26,Bangalore,Meta,9972499756,Oct-2026,Meeting Done
-415,Oct-26,Bangalore,Meta,9787376757,Oct-2026,Waiting for Floor Plan
-416,Oct-26,Bangalore,Meta,9060587145,Oct-2026,Active
-417,Oct-26,Coimbatore,Inbound,8110880117,Oct-2026,Active
-418,Oct-26,Bangalore,Meta,9980010345,Oct-2026,Waiting for Floor Plan
-419,Oct-26,Chennai,Google,9952952719,Oct-2026,Meeting Done
-420,Oct-26,Chennai,Meta,9884257866,Oct-2026,Active
-421,Oct-26,Coimbatore,Meta,9042543033,Oct-2026,Meeting Done
-422,Oct-26,Bangalore,Meta,7022106464,Oct-2026,Meeting Done
+403,Oct-26,Bangalore,Meta,9972077299,Oct-2026,Meeting Done - Sep MS
+404,Oct-26,Chennai,Google,9952952719,Oct-2026,Meeting Done
+405,Oct-26,Bangalore,Meta,8861431726,Oct-2026,Meeting Done
+406,Oct-26,Chennai,Meta,8925417738,Oct-2026,Active
+407,Oct-26,Coimbatore,Meta,9620555658,Oct-2026,Dead Lead
+408,Oct-26,Coimbatore,Meta,9042543033,Oct-2026,Meeting Done
+409,Oct-26,Coimbatore,Meta,9511701064,Oct-2026,Meeting Done - Oct MS
+410,Oct-26,Chennai,Inbound,9840461099,Oct-2026,Active
+411,Oct-26,Bangalore,Meta,9663611633,Oct-2026,Active
+412,Oct-26,Coimbatore,Inbound,9710555252,Oct-2026,Dead Lead
+413,Oct-26,Bangalore,Meta,9787376757,Oct-2026,Waiting for Floor Plan
+414,Oct-26,Bangalore,Meta,9060587145,Oct-2026,Meeting Done - Oct MS
+415,Oct-26,Coimbatore,Meta,9789092183,Oct-2026,Meeting Done
+416,Oct-26,Coimbatore,Inbound,8110880117,Oct-2026,Active
+417,Oct-26,Bangalore,Meta,9980010345,Oct-2026,Waiting for Floor Plan
+418,Oct-26,Bangalore,Meta,7022106464,Oct-2026,Meeting Done
+419,Oct-26,Chennai,Meta,9884257866,Oct-2026,Active
+420,Oct-26,Chennai,Meta,9841973519,Oct-2026,Meeting Done - Oct MS
+421,Oct-26,Chennai,Meta,8110977770,Oct-2026,Meeting Done
+422,Oct-26,Chennai,Meta,8197168555,Oct-2026,Meeting Done
 423,Oct-26,Chennai,Meta,7506278348,Oct-2026,Active
-424,Oct-26,Bangalore,Meta,9731361495,Oct-2026,Active
-425,Oct-26,Chennai,Meta,9841973519,Oct-2026,Active
+424,Oct-26,Bangalore,Meta,9310612121,Oct-2026,On Hold
+425,Oct-26,Bangalore,Meta,9731361495,Oct-2026,Active
 426,Oct-26,Bangalore,Meta,8884444087,Oct-2026,Meeting Done - Oct MS
-427,Oct-26,Chennai,Meta,9710214113,Oct-2026,Dead Lead
-428,Oct-26,Coimbatore,Meta,8754311670,Oct-2026,Active
-429,Oct-26,Chennai,Inbound,7305238669,Oct-2026,Active
-430,Oct-26,Coimbatore,Meta,9025327811,Oct-2026,Waiting for Floor Plan
-431,Oct-26,Bangalore,Meta,9310612121,Oct-2026,On Hold
-432,Nov-26,Coimbatore,Meta,8754311670,Oct-2026,Active
-433,Nov-26,Coimbatore,Meta,9511701064,Oct-2026,Meeting Done - Oct MS
-434,Nov-26,Coimbatore,Meta,8870473824,Sep-2026,Meeting Done - Sep MS
-435,Nov-26,Chennai,Meta,9551984498,Oct-2026,Meeting Done - Oct MS
-436,Nov-26,Bangalore,Meta,8884444087,Oct-2026,Meeting Done - Oct MS
-437,Nov-26,Bangalore,Meta,9731361495,Oct-2026,Active
-438,Nov-26,Bangalore,Meta,6363273180,Oct-2026,Meeting Scheduled
-439,Nov-26,Coimbatore,Meta,8610686810,Nov-2026,Active
-440,Nov-26,Chennai,Inbound,9962974655,Nov-2026,Waiting for floor plan
-441,Nov-26,Bangalore,Meta,7384032660,Nov-2026,Meeting Scheduled
-442,Nov-26,Chennai,Meta,7619138067,Nov-2026,Active
-443,Nov-26,Chennai,Inbound,8056270271,Nov-2026,Meeting Done
-444,Nov-26,Chennai,Meta,9884219111,Nov-2026,Waiting for floor plan
-445,Nov-26,Coimbatore,Meta,9443936609,Nov-2026,Waiting for floor plan
-446,Nov-26,Coimbatore,Meta,9791587256,Nov-2026,Waiting for floor plan
+427,Oct-26,Chennai,Meta,9710214113,Oct-2026,Meeting Done - Oct MS
+428,Oct-26,Coimbatore,Meta,9025327811,Oct-2026,Waiting for Floor Plan
+429,Oct-26,Coimbatore,Meta,8754311670,Oct-2026,Meeting Done
+430,Oct-26,Chennai,Inbound,7305238669,Oct-2026,Meeting Done - Oct MS
+431,Oct-26,Chennai,Meta,9739425753,Sep-2026,Meeting Done - Sep MS
+432,Nov-26,Coimbatore,Facebook,8610756456,Aug-2025,Meeting Done
+433,Nov-26,Chennai,Meta,9940408213,Oct-2026,Meeting Done - Oct MS
+434,Nov-26,Bangalore,Meta,6363273180,Oct-2026,Meeting Done - Sep MS
+435,Nov-26,Chennai,Meta,8056961548,Oct-2026,Meeting Done - Oct MS
+436,Nov-26,Bangalore,Meta,9483915686,Oct-2026,Meeting Done - Oct MS
+437,Nov-26,Chennai,Meta,9551984498,Oct-2026,Meeting Done - Oct MS
+438,Nov-26,Bangalore,Meta,9972077299,Oct-2026,Meeting Done - Sep MS
+439,Nov-26,Coimbatore,Meta,9511701064,Oct-2026,Meeting Done - Oct MS
+440,Nov-26,Bangalore,Meta,9060587145,Oct-2026,Meeting Done - Oct MS
+441,Nov-26,Chennai,Meta,9841973519,Oct-2026,Meeting Done - Oct MS
+442,Nov-26,Bangalore,Meta,9731361495,Oct-2026,Active
+443,Nov-26,Bangalore,Meta,8884444087,Oct-2026,Meeting Done - Oct MS
+444,Nov-26,Chennai,Meta,9710214113,Oct-2026,Meeting Done - Oct MS
+445,Nov-26,Coimbatore,Meta,8754311670,Oct-2026,Meeting Done
+446,Nov-26,Chennai,Inbound,7305238669,Oct-2026,Meeting Done - Oct MS
+447,Nov-26,Coimbatore,Meta,9843011128,Oct-2026,Meeting Done - Oct MS
+448,Nov-26,Coimbatore,Meta,8870473824,Sep-2026,Meeting Done - Sep MS
+449,Nov-26,Coimbatore,Meta,8610686810,Nov-2026,On-Hold
+450,Nov-26,Chennai,Meta,9176699907,Nov-2026,On-Hold
+451,Nov-26,Bangalore,Meta,7384032660,Nov-2026,Dead Lead
+452,Nov-26,Chennai,Meta,7619138067,Nov-2026,Meeting Done
+453,Nov-26,Chennai,Inbound,8056270271,Nov-2026,Meeting Done
+454,Nov-26,Chennai,Meta,9884219111,Nov-2026,Dead Lead
+455,Nov-26,Coimbatore,Meta,9443936609,Nov-2026,Meeting Done
+456,Nov-26,Coimbatore,Meta,9791587256,Nov-2026,Meeting Done
+457,Nov-26,Chennai,Meta,8939674461,Nov-2026,Dead Lead
+458,Nov-26,Bangalore,Meta,9741314701,Nov-2026,Meeting Done
+459,Nov-26,Bangalore,Meta,9554782884,Nov-2026,Dead Lead
+460,Nov-26,Coimbatore,Inbound,9008501290,Nov-2026,Meeting Done
+461,Nov-26,Bangalore,Meta,6362239060,Nov-2026,Dead Lead
+462,Nov-26,Chennai,Meta,9751180430,Nov-2026,Active
+463,Nov-26,Chennai,Meta,9789064963,Nov-2026,Active
+464,Nov-26,Bangalore,Meta,9535903915,Nov-2026,Meeting Done
+465,Nov-26,Coimbatore,Meta,9894216626,Nov-2026,Active
+466,Nov-26,Bangalore,Meta,9945671913,Nov-2026,Active
+467,Nov-26,Bangalore,Inbound,7975600493,Nov-2026,Meeting Done
+468,Nov-26,Bangalore,Meta,9886477466,Nov-2026,Meeting Done
+469,Nov-26,Coimbatore,Inbound,9843488544,Nov-2026,Dead Lead
+470,Nov-26,Bangalore,Meta,7980244846,Nov-2026,Active
+471,Nov-26,Bangalore,Meta,9886702070,Nov-2026,On-Hold
+472,Nov-26,Bangalore,Inbound,8095557177,Nov-2026,Dead Lead
+473,Nov-26,Chennai,Meta,7358013977,Nov-2026,Meeting Done
+474,Nov-26,Bangalore,Meta,9513806116,Nov-2026,Meeting Done
+475,Nov-26,Bangalore,Meta,9986154170,Nov-2026,On-Hold
+476,Nov-26,Chennai,Meta,9994125222,Nov-2026,Meeting Done
+477,Nov-26,Coimbatore,Meta,8248131770,Nov-2026,Dead Lead
+478,Nov-26,Coimbatore,Meta,9677147333,Nov-2026,Active
+479,Nov-26,Coimbatore,Meta,9842288280,Nov-2026,Meeting Done
+480,Nov-26,Chennai,Meta,8838979550,Nov-2026,Meeting Done
+481,Nov-26,Bangalore,Meta,9359538144,Nov-2026,On-Hold
+482,Nov-26,Chennai,Meta,9940091911,Nov-2026,Meeting Done
+483,Nov-26,Bangalore,Meta,9845218581,Nov-2026,Waiting for floor plan
+484,Nov-26,Bangalore,Inbound,9443396865,Nov-2026,Meeting Done
+485,Nov-26,Bangalore,Meta,7829253666,Nov-2026,Meeting Done
+486,Nov-26,Bangalore,Meta,7004062974,Nov-2026,Waiting for floor plan
+487,Nov-26,Chennai,Meta,9962974655,Nov-2026,Meeting Done
+488,Nov-26,Chennai,Facebook,9884464886,Dec-2025,Dead Lead
+489,Nov-26,Bangalore,Meta,9845035361,Nov-2026,Active
+490,Nov-26,Coimbatore,Meta,9786220594,Nov-2026,Waiting for floor plan
+491,Nov-26,Bangalore,Meta,8861098000,Nov-2026,Active
+492,Nov-26,Bangalore,Meta,7043349842,Nov-2026,Meeting Done
+493,Nov-26,Coimbatore,Meta,8870909699,Nov-2026,On-Hold
+494,Nov-26,Chennai,Meta,9841560021,Nov-2026,Meeting Done
+495,Nov-26,Bangalore,Meta,9448048506,Nov-2026,Dead Lead
+496,Nov-26,Coimbatore,Organic,9566182028,Nov-2026,Meeting Done
+497,Nov-26,Chennai,Meta,8806041444,Nov-2026,Active
+498,Nov-26,Chennai,Meta,9884864364,Nov-2026,Meeting Done
+499,Nov-26,Bangalore,Meta,8861461199,Nov-2026,Dead Lead
+500,Nov-26,Bangalore,Meta,9590595906,Nov-2026,Active
+501,Nov-26,Bangalore,Meta,9900506753,Nov-2026,Active
+502,Nov-26,Bangalore,Meta,9008920129,Nov-2026,Meeting Done
+503,Nov-26,Bangalore,Meta,9663064307,Nov-2026,Waiting for floor plan
+504,Nov-26,Chennai,Meta,9884423928,Nov-2026,Active
+505,Nov-26,Chennai,Meta,9176204236,Nov-2026,Active
+506,Nov-26,Bangalore,Meta,9900793929,Nov-2026,Meeting Done
+507,Nov-26,Chennai,Meta,7299069096,Nov-2026,Active
+508,Nov-26,Coimbatore,Meta,9176683171,Nov-2026,Waiting for floor plan
+509,Nov-26,Bangalore,Meta,8197979233,Nov-2026,Meeting Done
+510,Nov-26,Bangalore,Meta,9977779327,Nov-2026,Waiting for floor plan
+511,Nov-26,Bangalore,Inbound,9845094478,Nov-2026,Meeting Done
+512,Nov-26,Chennai,Inbound,9751546882,Nov-2026,Meeting Scheduled
+513,Nov-26,Bangalore,Meta,8431917230,Nov-2026,Waiting for floor plan
+514,Nov-26,Chennai,Meta,8124584400,Nov-2026,Meeting Done
+515,Nov-26,Bangalore,Meta,9538350002,Nov-2026,Meeting Done
+516,Nov-26,Coimbatore,Google,7403012916,Nov-2026,Active
+517,Nov-26,Chennai,Meta,9884777788,Nov-2026,Meeting Done
+518,Nov-26,Chennai,Meta,7550042580,Nov-2026,Meeting Done
+519,Nov-26,Coimbatore,Inbound,8122761000,Nov-2026,Meeting Done
+520,Nov-26,Coimbatore,Meta,9894184877,Nov-2026,Meeting Done
+521,Nov-26,Bangalore,Meta,9740710358,Nov-2026,On-Hold
+522,Nov-26,Chennai,Meta,9790715694,Nov-2026,Dead Lead
+523,Nov-26,Bangalore,Meta,9513565161,Nov-2026,Waiting for floor plan
+524,Nov-26,Chennai,Meta,9944102700,Nov-2026,Meeting Done
+525,Nov-26,Bangalore,Meta,6366566107,Nov-2026,Active
+526,Nov-26,Bangalore,Meta,8296434919,Nov-2026,Waiting for floor plan
+527,Nov-26,Chennai,Inbound,8667730994,Nov-2026,Waiting for floor plan
+528,Nov-26,Coimbatore,Meta,9443156431,Nov-2026,Active
+529,Nov-26,Chennai,Meta,7019964942,Nov-2026,Active
+530,Nov-26,Chennai,Meta,9597560009,Nov-2026,On-Hold
+531,Nov-26,Chennai,Meta,7904546736,Nov-2026,Active
+532,Nov-26,Bangalore,Meta,8861793204,Nov-2026,Active
+533,Nov-26,Chennai,Meta,9176847444,Nov-2026,Active
+534,Nov-26,Chennai,Meta,9176079209,Nov-2026,Active
+535,Nov-26,Coimbatore,Meta,9688488919,Nov-2026,Meeting Done
+536,Nov-26,Bangalore,Meta,9611046344,Nov-2026,Waiting for floor plan
+537,Nov-26,Coimbatore,Meta,9843046515,Nov-2026,Active
+538,Nov-26,Coimbatore,Meta,9894074927,Nov-2026,Active
+539,Nov-26,Chennai,Meta,9884679912,Nov-2026,Active
+540,Nov-26,Coimbatore,Meta,9538650972,Nov-2026,Waiting for floor plan
+541,Nov-26,Bangalore,Meta,9980139247,Nov-2026,On-Hold
+542,Nov-26,Chennai,Inbound,7483215388,Nov-2026,Active
+543,Nov-26,Bangalore,Meta,9900016305,Nov-2026,Active
+544,Nov-26,Chennai,Meta,9941208822,Nov-2026,On-Hold
+545,Nov-26,Bangalore,Meta,9620264072,Nov-2026,Active
+546,Nov-26,Chennai,Meta,9717469282,Nov-2026,On-Hold
+547,Nov-26,Bangalore,Meta,7483518068,Nov-2026,Waiting for floor plan
+548,Nov-26,Bangalore,Meta,9972609922,Nov-2026,Waiting for floor plan
+549,Nov-26,Bangalore,Meta,9900515831,Nov-2026,Active
